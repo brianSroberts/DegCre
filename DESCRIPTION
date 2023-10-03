@@ -2,6 +2,7 @@ Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
 Version: 0.1.0
+Date: 2023-10-03
 Authors@R: person(given="Brian S.", family="Roberts", email = "broberts@hudsonalpha.org", 
   role = c("aut", "cre"))
 Maintainer@R: person(given="Brian S.", family="Roberts", email = "broberts@hudsonalpha.org")
@@ -10,6 +11,8 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+Depends: R (>= 4.2.1)
+URL: https://github.com/brianSroberts/DegCre
 Imports:
 	GenomicRanges,
 	InteractionSet,
