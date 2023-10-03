@@ -3,13 +3,8 @@
 \docType{package}
 \name{DegCre}
 \alias{DegCre}
-\alias{_PACKAGE}
 \alias{DegCre-package}
 \title{DegCre}
 \description{
 Probabilistic association of DEGs to CREs from differential data.
-}
-\author{
-\strong{Maintainer}: Brian S. Roberts \email{broberts@hudsonalpha.org}
-
 }
