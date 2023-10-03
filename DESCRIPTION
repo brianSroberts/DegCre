@@ -24,8 +24,6 @@ Imports:
 biocViews:
 	GeneExpression,
 	GeneRegulation,
-	ChIPSeqData,
-	RNASeqData,
 	ATACSeq,
 	ChIPSeq,
 	DNaseSeq,
