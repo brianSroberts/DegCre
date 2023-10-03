@@ -5,7 +5,7 @@
 With the `devtools` pacakge installed, run:
 
 ```r
-devtools::install_github("brianSroberts/DegCre")`
+devtools::install_github("brianSroberts/DegCre")
 ```
 
 ## Introduction
