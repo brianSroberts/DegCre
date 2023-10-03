@@ -21,6 +21,15 @@ Imports:
 	stats,
 	graphics,
 	grDevices
+biocViews:
+	GeneExpression,
+	GeneRegulation,
+	ChIPSeqData,
+	RNASeqData,
+	ATACSeq,
+	ChIPSeq,
+	DNaseSeq,
+	RNASeq
 Suggests: 
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg38,
