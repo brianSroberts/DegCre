@@ -11,7 +11,7 @@
 #' @importFrom stats median rnorm pbinom quantile p.adjust
 #' @importFrom graphics plot lines points par axis layout polygon text hist
 #' @import grDevices
-"_PACKAGE"
+NULL
 
 #' DegCre input data for examples.
 #'
