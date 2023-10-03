@@ -8,13 +8,11 @@
 #' @aliases DegCre-package
 #' @import GenomicRanges
 #' @import S4Vectors
-#' @import plotgardener
-#' @import InteractionSet
-#' @import stats
-#' @import graphics
+#' @importFrom stats median rnorm pbinom quantile p.adjust
+#' @importFrom graphics plot lines points par axis layout polygon text hist
 #' @import grDevices
-
 "_PACKAGE"
+
 #' DegCre input data for examples.
 #'
 #' @name DexNR3C1

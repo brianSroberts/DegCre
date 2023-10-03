@@ -82,6 +82,8 @@ calcRawAssocProbOR <- function(degCreResList){
 #'
 #' If no associations pass the significance threshold, the function returns 'NA' and prints a message.
 #'
+#' @importFrom InteractionSet GInteractions
+#'
 #' @examples
 #' \dontrun{
 #' #Generate DegCre results.
@@ -119,7 +121,7 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 	else{
 		keepDegCreHits <- degCreHits[maskPassAlpha]
 	
-		outGInter <- GInteractions(granges(DegGRX[queryHits(keepDegCreHits)]),
+		outGInter <- InteractionSet::GInteractions(granges(DegGRX[queryHits(keepDegCreHits)]),
 			granges(CreGRX[subjectHits(keepDegCreHits)]))
 	
 		mcolsHitsDf <- data.frame(mcols(keepDegCreHits))

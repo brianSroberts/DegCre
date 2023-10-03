@@ -26,6 +26,7 @@
 #' @param useLogFC Logical, indicating whether to use log-fold change values for the CRE differential signal. (Default: \code{TRUE})
 #' @param creSignalBinRes Bin resolution in base pairs for the CRE signal track. Only used for initial calculation and will likely differ from display resolution. (Default: \code{100})
 #'
+#' @importFrom plotgardener plotPairsArches annoHeatmapLegend colorby plotSignal plotGenomeLabel plotGenes plotText pageCreate
 #'
 #' @details
 #' This function uses \href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener} functionality to generate browser plots for visualizing DegCre analysis results in specified regions. The user can input genomic regions or gene names.
