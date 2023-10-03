@@ -39,7 +39,7 @@ names(myDegCreResList)
 head(myDegCreResList$degCreHits)
 ```
 Next plot the association probability versus distance:
-
+<img src="man/figures/assocProbVsDist.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 binStats <- plotDegCreAssocProbVsDist(degCreResList=myDegCreResList,
@@ -47,6 +47,7 @@ binStats <- plotDegCreAssocProbVsDist(degCreResList=myDegCreResList,
 ```
 
 We can plot a gene of interest browser view using [plotgardner](https://bioconductor.org/packages/release/bioc/html/plotgardener.html) functionality:
+<img src="man/figures/browserExample.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 browserOuts <- plotBrowserDegCre(degCreResList=myDegCreResList,
