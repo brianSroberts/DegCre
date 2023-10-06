@@ -44,6 +44,7 @@ library(DegCre)
 DegCre is run on the two input `GRanges`, `DegGR` and `CreGR`, and differential p-values associated with each. To require the effect directions be concordant between the changes in gene expression and CRE signal, users must also supply log fold-changes for each and set `reqEffectDirConcord=TRUE` (default value). As example data, we use  `DexNR3C1` derived from McDowell et al. [@McDowell2018Glucocorticoid] using [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [csaw](https://bioconductor.org/packages/release/bioc/html/csaw.html):
 
 ```{r demo inputs}
+data(DexNR3C1)
 lapply(DexNR3C1,head)
 ```
 We now run DegCre on this data with default values:
