@@ -12,7 +12,9 @@
 #' Thus it is a measure of the increase in association probability due to CRE p-value information content over what would occur by random chance.
 #' 
 #' @examples
-#' \dontrun{
+#' #Load test data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -85,7 +87,9 @@ calcRawAssocProbOR <- function(degCreResList){
 #' @importFrom InteractionSet GInteractions
 #'
 #' @examples
-#' \dontrun{
+#' #Load test data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -98,7 +102,6 @@ calcRawAssocProbOR <- function(degCreResList){
 #' gInteractions <- 
 #   convertdegCreResListToGInteraction(degCreResList=degCreResListDexNR3C1,
 #'                                     assocAlpha = 0.01)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -157,7 +160,9 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 #' If no associations pass the significance threshold, the function returns 'NA'.
 #'
 #' @examples
-#' \dontrun{
+#' #Load test data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -174,8 +179,6 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 #' #Write out as text file.
 #'
 #' write.table(outDf,file="myDegCreResults.tsv",sep="\t",row.names=F,quote=F)
-#'
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -201,21 +204,23 @@ convertDegCreDataFrame <- function(degCreResList,
 		keepDegGRx <- DegGRX[queryHits(keepDegCreHits)]
 		keepDegDfx <- as.data.frame(keepDegGRx)
 		#get rid of "width" column
-		keepDegDfx <- keepDegDfx[,c(1:3,5:ncol(keepDegDfx))]
+		keepDegDfx <- keepDegDfx[,c(seq_len(3),
+					    seq(from=5,to=ncol(keepDegDfx)))]
 		colnames(keepDegDfx)[1] <- "chr"
 		colnames(keepDegDfx) <- paste("Deg",colnames(keepDegDfx),sep="_")
 		
 		keepCreGRx <- CreGRX[subjectHits(keepDegCreHits)]
 		keepCreDfx <- as.data.frame(keepCreGRx)
 		#get rid of "width" column
-		keepCreDfx <- keepCreDfx[,c(1:3,5:ncol(keepCreDfx))]
+		keepCreDfx <- keepCreDfx[,c(seq_len(3),
+					    seq(from=5,to=ncol(keepCreDfx)))]
 		colnames(keepCreDfx)[1] <- "chr"
 		colnames(keepCreDfx) <- paste("Cre",colnames(keepCreDfx),sep="_")
 		
 		hitsMcolsDf <- as.data.frame(mcols(keepDegCreHits))
 		
 		#keep only those that ar not redundant with those in Deg or Cre Dfs
-		keepHitsMcolsDf <- hitsMcolsDf[,c(1:4,8:10)]
+		keepHitsMcolsDf <- hitsMcolsDf[,c(seq_len(4),seq(from=8,to=10))]
 		
 		outDf <- data.frame(keepDegDfx[,1:4],
 			keepCreDfx[,1:4],
