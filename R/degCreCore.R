@@ -627,7 +627,7 @@ degCrePRAUC <- function(degCreResList,
 	testedAdjProb <- assocProb[maskAdjProbNot0]
 	testedExpectedDEGPos <- expectedDEGPos[maskAdjProbNot0]
 	
-	sortTestedAdjProb <- sort(unique(testedAdjProb),decreasing=T)
+	sortTestedAdjProb <- sort(unique(testedAdjProb),decreasing=TRUE)
 	
 	if(length(sortTestedAdjProb)<=nThresh){
 		threshAdjProbs <- sortTestedAdjProb
@@ -652,7 +652,7 @@ degCrePRAUC <- function(degCreResList,
 		return(c(tprX,ppvX))
 	})
 	
-	actualTPrPPVMAt <- matrix(unlist(listActualTPrPPV),ncol=2,byrow=T)
+	actualTPrPPVMAt <- matrix(unlist(listActualTPrPPV),ncol=2,byrow=TRUE)
 	colnames(actualTPrPPVMAt) <- c("TPR","PPV")
 	
 	listShuffTprPPV <- lapply(1:nShuff,
@@ -673,7 +673,7 @@ degCrePRAUC <- function(degCreResList,
 			return(c(tprX,ppvX))
 		}))
 		
-		shuffTPrPPVMAt <- matrix(unlist(listShuffTprPpvI),ncol=2,byrow=T)
+		shuffTPrPPVMAt <- matrix(unlist(listShuffTprPpvI),ncol=2,byrow=TRUE)
 
 		return(shuffTPrPPVMAt)
 	})
