@@ -85,7 +85,9 @@ NULL
 #'
 #' 
 #' @examples
-#' \dontrun{
+#' #Load sample data.
+#' data(DexNR3C1)
+#'
 #' #With defaults.
 #' degCreResList <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -103,7 +105,6 @@ NULL
 #'		                      reqEffectDirConcord=FALSE,
 #'		                      maxDist=1e5,
 #'		                      alphaVal=0.001)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -226,7 +227,7 @@ runDegCre <- function(DegGR,
 	
 	numHits <- nrow(sortPromCreHitsDf)
 	
-	allSortHitIndices <- c(1:numHits)
+	allSortHitIndices <- seq_len(numHits)
 	
 	rawSortHitChunksList <- split(allSortHitIndices, 
 		ceiling(seq_along(allSortHitIndices)/(pickedBinSize)))
@@ -269,7 +270,7 @@ runDegCre <- function(DegGR,
 	
 	#add bin membership data to HitsDf
 	
-	distBinId <- unlist(lapply(c(1:length(sortHitChunksList)),function(binIdX){
+	distBinId <- unlist(lapply(seq_along(sortHitChunksList),function(binIdX){
 		numMembers <- length(sortHitChunksList[[binIdX]])
 		return(rep(binIdX,numMembers))
 	}))
@@ -447,8 +448,9 @@ runDegCre <- function(DegGR,
 
 #'
 #' @examples
-#' \dontrun{
-#' # Example usage:
+#' #Load sample data.
+#' data(DexNR3C1)
+#' # Run DegCre over range of alpha values:
 #' alphaOptList <- optimizeAlphaDegCre(DegGR = DexNR3C1$DegGR,
 #'                            DegP = DexNR3C1$DegGR$pVal,
 #'                            DegLfc = DexNR3C1$DegGR$logFC,
@@ -458,7 +460,6 @@ runDegCre <- function(DegGR,
 #'
 #' bestAlphaId <- which.max(alphaOptList$alphaPRMat[,4])
 #' bestDegCreResList <- alphaOptList$degCreResListsByAlpha[[bestAlphaId]]
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -586,7 +587,9 @@ optimizeAlphaDegCre <- function(DegGR,
 #'
 #'
 #' @examples
-#' \dontrun{
+#' #Load sample data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -602,7 +605,7 @@ optimizeAlphaDegCre <- function(DegGR,
 #'
 #' prAUCList <- degCrePRAUC(degCreResList=degCreResListDexNR3C1,
 #'                         makePlot=FALSE)
-#'}
+#'
 #' @author Brian S. Roberts
 #'
 #' @export
@@ -785,7 +788,7 @@ distBinHeuristic <- function(degCreHits,
 			"DegGR to CreGR hits for optimal distance bin size."))
 	}
 	
-	allSortHitIndices <- c(1:numAssocs)
+	allSortHitIndices <- seq_len(numAssocs)
 	
 	allHitCrePs <- CreP[sortPromCreSubjHits]
 	
@@ -865,7 +868,7 @@ distBinHeuristic <- function(degCreHits,
 #' \dontrun{
 #' # Example usage:
 #' binSizes <- c(10000, 5000, 200)
-#' hitIndices <- c(1:1e5)
+#' hitIndices <- seq_len(1e5)
 #' pValues <- runif(1e5)
 #' 
 #' resultMatrix <- calcKStestStatMedian(testBinSizes = binSizes,
@@ -954,10 +957,11 @@ fastKS <- function(testSet, testIndices, refCumProbs) {
 #' Large values \code{maxDist} will require more computational resources.
 #'
 #' @examples
-#' \dontrun{
-#' # Example usage of the function.
+#' #Load sample data.
+#' data(DexNR3C1)
+#'
+#' # Get hits with association distances.
 #' hits <- getAssocDistHits(DegGR = DexNR3C1$DegGR, CreGR = DexNR3C1$CreGR, maxDist = 1e6)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -994,7 +998,7 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 #'
 #' @examples
 #' \dontrun{
-#' # Example usage of the function.
+#' # Get stat results.
 #' statsMatrix <- calcDependIndependEnrichStats(hitsWithDistDf = myHitsDf, subHitsIndex = mySubHits, dependPadj = myDependPadj, independP = myIndependP, alpha = 0.05)
 #' }
 #'
@@ -1011,7 +1015,7 @@ calcDependIndependEnrichStats <- function(hitsWithDistDf, subHitsIndex, dependPa
   log10P <- log10(independP[subjHitsTemp])
   log10RoundedP <- round(log10P, digits = 1)
   
-  listMapLog10RoundedAllToUniq <- tapply(c(1:length(log10RoundedP)), INDEX = log10RoundedP, FUN = c)
+  listMapLog10RoundedAllToUniq <- tapply(seq_along(log10RoundedP), INDEX = log10RoundedP, FUN = c)
   
   uniqlog10RoundedP <- as.numeric(names(listMapLog10RoundedAllToUniq))
   
@@ -1062,7 +1066,7 @@ calcDependIndependEnrichStats <- function(hitsWithDistDf, subHitsIndex, dependPa
 #'
 #' @examples
 #' \dontrun{
-#' # Example usage of the function.
+#' # Distance bin correct association probabilities.
 #' correctedProbs <- correctAssocProbs(sortHitsDf = mySortedHits, assocProbs = myAssocProbs, refAssocProbs = myRefAssocProbs)
 #' }
 #'
@@ -1076,7 +1080,7 @@ correctAssocProbs <- function(sortHitsDf, assocProbs, refAssocProbs = NULL) {
   # sortHitsDf[,4] is the dist bin Id. Assoc probs within the same distance
   # bin are only corrected by Assoc probs in lower dist bins.
   
-  UniqSubjHitAdjProbs <- unlist(tapply(c(1:length(assocProbs)), INDEX = sortHitsDf[,2], FUN = function(indexX) {
+  UniqSubjHitAdjProbs <- unlist(tapply(seq_along(assocProbs), INDEX = sortHitsDf[,2], FUN = function(indexX) {
     
     assocProbsX <- assocProbs[indexX]
     refAssocProbsX <- refAssocProbs[indexX]
@@ -1116,7 +1120,7 @@ correctAssocProbs <- function(sortHitsDf, assocProbs, refAssocProbs = NULL) {
     return(adjAssocProbsX)
   }))
   
-  MapUniqSubjToOrig <- unlist(tapply(c(1:length(assocProbs)), sortHitsDf[,2], function(Ix) {
+  MapUniqSubjToOrig <- unlist(tapply(seq_along(assocProbs), sortHitsDf[,2], function(Ix) {
     return(Ix)
   }))
   
@@ -1143,7 +1147,7 @@ correctAssocProbs <- function(sortHitsDf, assocProbs, refAssocProbs = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' # Example usage of the function.
+#' # Get FDR from binomila distribtuion.
 #' binomFDR <- calcBinomFDRperBin(allDistBinsStatsMat = myStatsMatrix, chunkI = myChunkIndices, alphaVal = 0.05)
 #' }
 #'
@@ -1238,12 +1242,10 @@ calcBinomFDRperBin <- function(allDistBinsStatsMat, chunkI, alphaVal) {
 #' Not exported. This function calculates the AUC for a given set of x and y values using the trapezoidal rule. It provides a measure of the area under the curve formed by the x and y values, which is often used to assess the performance of models or the shape of a curve.
 #'
 #' @examples
-#' \dontrun{
-#' # Example usage of the function.
-#' x <- c(1:10)
+#' # Get AUC of quadratic curve.
+#' x <- seq_len(10)
 #' y <- x^2
 #' auc <- calcAUC(x, y)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
