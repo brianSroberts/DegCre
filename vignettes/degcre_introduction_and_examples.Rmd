@@ -242,5 +242,10 @@ degCreDf <- convertDegCreDataFrame(degCreResList=bestDegCreResList,
 
 head(degCreDf)
 ```
+## Session Info
 
-## 7 References
+```r{r demo session info}
+sessionInfo()
+```
+
+## 8 References
