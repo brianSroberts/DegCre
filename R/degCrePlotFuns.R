@@ -11,7 +11,9 @@
 #' @seealso \link{distBinHeuristic} for calculating the DEG-CRE bin heuristic.
 #'
 #' @examples
-#' \dontrun{
+#' #Load example data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -23,7 +25,6 @@
 #' #Plot distance bin median KS statistic curve.
 #'
 #'plotDegCreBinHeuristic(degCreResList=degCreResListDexNR3C1)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -91,7 +92,9 @@ plotDegCreBinHeuristic <- function(degCreResList) {
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' #Load example data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -104,7 +107,6 @@ plotDegCreBinHeuristic <- function(degCreResList) {
 #'
 #' outProbVsDistMat <- 
 #'  plotDegCreAssocProbVsDist(degCreResList=degCreResListDexNR3C1)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
@@ -141,7 +143,7 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 		
 	par(mai=c(0,0,0,0))
 	
-	layX <- layout(matrix(c(1:2),ncol=1),heights=c(50,100))
+	layX <- layout(matrix(seq_len(2),ncol=1),heights=c(50,100))
 	
 	firstPlotMai <- inParMai
 	firstPlotMai[1] <- 0
@@ -158,7 +160,7 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 	}))
 	
 	#get bin midpoints
-	binMids <- c(0,uniqMaxBinDists[c(1:(length(uniqMaxBinDists)-1))]) +
+	binMids <- c(0,uniqMaxBinDists[seq_len((length(uniqMaxBinDists)-1))]) +
 		diff(c(0,uniqMaxBinDists))/2
 	
 	xLimits <- c(0,max(plotDists))
@@ -176,7 +178,7 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 	
 	quantsMat <- matrix(ncol=4)
 	
-	for(i in c(1:length(uniqMaxBinDists))){
+	for(i in seq_along(uniqMaxBinDists)){
 		binDistX <- uniqMaxBinDists[i]
 		maskDistBinX <- which(maxBinDists==binDistX)
 		
@@ -280,7 +282,9 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' #' #Load example data.
+#' data(DexNR3C1)
+#'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
 #'		                      DegP=DexNR3C1$DegGR$pVal,
@@ -291,7 +295,6 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 #'
 #' # Calculate null association probabilities.
 #' outNullMat <- getDistBinNullAssocProb(degCreResList = degCreResListDexNR3C1)
-#' }
 #'
 #' @author Brian S. Roberts
 #'
