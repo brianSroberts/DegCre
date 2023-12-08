@@ -45,3 +45,4 @@ correctedProbs <- correctAssocProbs(sortHitsDf = mySortedHits,
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

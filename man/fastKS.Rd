@@ -42,3 +42,4 @@ ks_stat <- fastKS(testSet = testData,
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

@@ -484,6 +484,7 @@ plotBrowserDegCre <- function(degCreResList,
 #' if specified, log-fold change values. It then converts these values into a
 #' signed -log p-value in the \code{signal} metadata column.
 #'
+#' @keywords internal
 #'
 #' @examples
 #' #Load example data.
@@ -583,6 +584,8 @@ creGRToSignal <- function(
 #' contain duplicate regions, ensuring correct associations.
 #' This function is meant to run within \link{plotBrowserDegCre}. It will not
 #' run well on unintended inputs.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -814,6 +817,8 @@ makePlotGInter <- function(DegGR,
 #' This function is meant to run within \link{plotBrowserDegCre}. It will not
 #' run well on unintended inputs.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' #Load example data.
@@ -897,6 +902,8 @@ getDegCrePlotRegionFromGene <- function(degCreResList,
 #' The 'just' parameter determines whether the label should be placed at the
 #' top, bottom, or center of the plot object. The function returns the
 #' calculated Y coordinate.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

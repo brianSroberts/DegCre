@@ -63,3 +63,4 @@ creSignalGR <- creGRToSignal(CreGR=myCreGR, plotRegionGR=myPlotRegionGR)
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

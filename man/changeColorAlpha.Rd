@@ -34,3 +34,4 @@ newColor <- changeColorAlpha(colorVec = "#FF0000", newAlpha = 80)
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

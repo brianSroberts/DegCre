@@ -370,6 +370,8 @@ getDistBinNullAssocProb <- function(degCreResList) {
 #' alpha channel value. It returns the modified color(s) with the updated
 #' transparency.
 #'
+#' @keywords internal
+#'
 #' @return A character vector of modified colors with adjusted transparency in
 #' hexadecimal.
 #'

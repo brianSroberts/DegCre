@@ -75,3 +75,4 @@ plot(binStatsMatrix[, 1], binStatsMatrix[, 2], type = "l", xlab =
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

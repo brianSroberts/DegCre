@@ -41,3 +41,4 @@ labelY <- getLabelYfromPlotgardenerObj(plotObj=mySignalPlotObj,
 \author{
 [Author Name]
 }
+\keyword{internal}

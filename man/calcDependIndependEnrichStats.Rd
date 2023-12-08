@@ -60,3 +60,4 @@ statsMatrix <- calcDependIndependEnrichStats(hitsWithDistDf = myHitsDf,
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

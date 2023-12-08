@@ -43,3 +43,4 @@ chunkI = myChunkIndices, alphaVal = 0.05)
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

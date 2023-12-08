@@ -53,3 +53,4 @@ resultMatrix <- calcKStestStatMedian(testBinSizes = binSizes,
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

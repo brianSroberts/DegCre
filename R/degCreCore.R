@@ -896,6 +896,8 @@ degCrePRAUC <- function(degCreResList,
 #' This function operates within \link{runDegCre} on controlled inputs. It
 #' will not run well on unintended inputs.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' # Example usage:
@@ -1021,6 +1023,8 @@ distBinHeuristic <- function(degCreHits,
 #' It is meant to run within \link{distBinHeuristic}. It will not run well
 #' on unintended inputs.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' # Example usage:
@@ -1090,6 +1094,8 @@ calcKStestStatMedian <- function(testBinSizes,
 #' calculating the p-value (for computational speed).
 #' It is meant to run within \link{calcKStestStatMedian}. It will not run well
 #' on unintended inputs.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -1189,6 +1195,8 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 #' It is meant to run within \link{runDegCre}. It will not run well on
 #' unintended inputs.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{
 #' # Get stat results.
@@ -1276,6 +1284,8 @@ calcDependIndependEnrichStats <- function(hitsWithDistDf, subHitsIndex,
 #' weighted higher than those that span farther distances.
 #' It is meant to run within \link{runDegCre}. It will not run well on
 #' unintended inputs.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -1373,6 +1383,8 @@ correctAssocProbs <- function(sortHitsDf, assocProbs, refAssocProbs = NULL) {
 #' or ties in the significance ranks.
 #' It is meant to run within \link{runDegCre}. It will not run well on
 #' unintended inputs.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -1474,6 +1486,8 @@ calcBinomFDRperBin <- function(allDistBinsStatsMat, chunkI, alphaVal) {
 #' values using the trapezoidal rule. It provides a measure of the area under
 #' the curve formed by the x and y values, which is often used to assess the
 #' performance of models or the shape of a curve.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' # Get AUC of quadratic curve.

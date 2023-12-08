@@ -14,3 +14,4 @@
 * Fixed row names in `plotDegCreAssocProbVsDist`
 * Changed left margin handling and arched plot color bar placement in 
 `plotBrowserDegCre`
+* Added internal keyword to un-exported functions.

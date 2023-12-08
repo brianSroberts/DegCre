@@ -76,3 +76,4 @@ GInterX <- makePlotGInter(DegGR=myDegGR,
 \author{
 Brian S. Roberts
 }
+\keyword{internal}

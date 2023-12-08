@@ -34,3 +34,4 @@ auc <- calcAUC(x, y)
 \author{
 Brian S. Roberts
 }
+\keyword{internal}
