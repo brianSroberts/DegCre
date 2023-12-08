@@ -10,22 +10,30 @@ getLabelYfromPlotgardenerObj(plotgardenerObj, just = "center")
 \item{plotgardenerObj}{A plotgardener plot object.}
 
 \item{just}{Character specifying the vertical positioning of the label.
-Options include "top" (top-aligned), "bottom" (bottom-aligned), and "center" (center-aligned). (Default: \code{center})}
+Options include "top" (top-aligned), "bottom" (bottom-aligned), and
+"center" (center-aligned). (Default: \code{center})}
 }
 \value{
-A numeric value representing the Y coordinate in inches for label placement.
+A numeric value representing the Y coordinate in inches for label
+ placement.
 }
 \description{
-Given a PlotGardener plot object, this function calculates the Y coordinate for label placement based on the vertical positioning specified by the 'just' parameter.
+Given a PlotGardener plot object, this function calculates the Y coordinate
+for label placement based on the vertical positioning specified by the
+'just' parameter.
 }
 \details{
-Not exported. This function takes a plotgardener plot object as input and calculates the Y coordinate for label placement based on the vertical positioning specified by the 'just' parameter. 
-The 'just' parameter determines whether the label should be placed at the top, bottom, or center of the plot object. The function returns the calculated Y coordinate.
+Not exported. This function takes a plotgardener plot object as input and
+calculates the Y coordinate for label placement based on the vertical
+positioning specified by the 'just' parameter.
+The 'just' parameter determines whether the label should be placed at the
+top, bottom, or center of the plot object. The function returns the
+calculated Y coordinate.
 }
 \examples{
 \dontrun{
 # Get y label.
-labelY <- getLabelYfromPlotgardenerObj(plotObj=mySignalPlotObj, 
+labelY <- getLabelYfromPlotgardenerObj(plotObj=mySignalPlotObj,
                                        just = "center")
 }
 

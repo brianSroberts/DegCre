@@ -21,45 +21,68 @@ optimizeAlphaDegCre(
 )
 }
 \arguments{
-\item{DegGR}{A \link[GenomicRanges]{GRanges} object of gene TSSs. Multiple TSSs per gene are allowed.}
+\item{DegGR}{A \link[GenomicRanges]{GRanges} object of gene TSSs. Multiple
+TSSs per gene are allowed.}
 
-\item{DegP}{A numeric vector of differential expression p-values for genes in \code{DegGR}.}
+\item{DegP}{A numeric vector of differential expression p-values for genes
+in \code{DegGR}.}
 
-\item{DegLfc}{A numeric vector of log fold-change values of differential expression for gene in \code{DegGR}. Required when \code{reqEffectDirConcord = TRUE}. (Default: \code{NULL})}
+\item{DegLfc}{A numeric vector of log fold-change values of differential
+expression for gene in \code{DegGR}. Required when
+\code{reqEffectDirConcord = TRUE}. (Default: \code{NULL})}
 
 \item{CreGR}{A \link[GenomicRanges]{GRanges} object of CRE regions.}
 
-\item{CreP}{A numeric vector differential signal p-values for regions in \code{CreGR}.}
+\item{CreP}{A numeric vector differential signal p-values for regions in
+\code{CreGR}.}
 
-\item{CreLfc}{A numeric vector log fold-change values of differential signal for regions in \code{CreGR}. Required when \code{reqEffectDirConcord = TRUE}. (Default: \code{NULL})}
+\item{CreLfc}{A numeric vector log fold-change values of differential
+signal for regions in \code{CreGR}. Required when
+\code{reqEffectDirConcord = TRUE}. (Default: \code{NULL})}
 
-\item{reqEffectDirConcord}{A logical whether to require concordance between the effect direction between DEG and CRE differential values. (Default: \code{NULL})}
+\item{reqEffectDirConcord}{A logical whether to require concordance between
+the effect direction between DEG and CRE differential values.
+(Default: \code{NULL})}
 
-\item{padjMethod}{A character value indicating the method for p-value adjustment. Do not change from default under most circumstances. Can be any method name accepted by \code{p.adjust()} (Default: \code{bonferroni})}
+\item{padjMethod}{A character value indicating the method for p-value
+adjustment. Do not change from default under most circumstances. Can be any
+method name accepted by \code{p.adjust()} (Default: \code{bonferroni})}
 
-\item{maxDist}{An integer value specifying the maximum distance for probability calculation of TSS to CRE associations. (Default: \code{1e6})}
+\item{maxDist}{An integer value specifying the maximum distance for
+probability calculation of TSS to CRE associations. (Default: \code{1e6})}
 
-\item{verbose}{A logical indicating whether to print messages of step completion and algorithm results. (Default: \code{NULL})}
+\item{verbose}{A logical indicating whether to print messages of step
+completion and algorithm results. (Default: \code{NULL})}
 
-\item{smallestTestBinSize}{An integer value specifying the size (number of elements) of the smallest distance bin to be considered in the optimization algorithm. (Default: \code{100})}
+\item{smallestTestBinSize}{An integer value specifying the size
+(number of elements) of the smallest distance bin to be considered in the
+optimization algorithm. (Default: \code{100})}
 
-\item{fracMinKsMedianThresh}{A numeric value between 0 and 1 specifying the optimization criterion for the distance bin size algorithm (See Details). (Default: \code{0.2})}
+\item{fracMinKsMedianThresh}{A numeric value between 0 and 1 specifying the
+optimization criterion for the distance bin size algorithm (See Details).
+(Default: \code{0.2})}
 
-\item{testedAlphaVals}{A numeric vector of DEG alpha values to test (Default: \code{c(0.005,0.01,0.02,0.03,0.05,0.1)}).}
+\item{testedAlphaVals}{A numeric vector of DEG alpha values to test
+(Default: \code{c(0.005,0.01,0.02,0.03,0.05,0.1)}).}
 }
 \value{
 A named list containing:
 \describe{
-  \item{alphaPRMat}{A matrix of Precision-Recall Area Under the Curve (AUC) values.}
-  \item{degCreResListsByAlpha}{Named list of DegCre results lists indexed by the \code{testedAlphaVals}}.
+  \item{alphaPRMat}{A matrix of Precision-Recall Area Under the Curve
+  (AUC) values.}
+  \item{degCreResListsByAlpha}{Named list of DegCre results lists indexed
+  by the \code{testedAlphaVals}}.
 }
 
 The columns of \code{alphaPRMat} are:
 \describe{
   \item{alphaVal}{Numeric vector of tested DEG alpha value.}
-  \item{AUC}{Numeric vector of Area under the curve of a Precision-Recall (PR) curve based on associations recovering significant DEGs.}
-  \item{deltaAUC}{Numeric vector of PR AUC minus the AUC of the no-skill line.}
-  \item{normDeltaAUC}{Numeric vector of the value of \code{deltaAUC} divided by one minus the no-skill AUC.}
+  \item{AUC}{Numeric vector of Area under the curve of a Precision-Recall
+  (PR) curve based on associations recovering significant DEGs.}
+  \item{deltaAUC}{Numeric vector of PR AUC minus the AUC of the
+  no-skill line.}
+  \item{normDeltaAUC}{Numeric vector of the value of \code{deltaAUC}
+  divided by one minus the no-skill AUC.}
 }
 }
 \description{
@@ -68,13 +91,16 @@ Runs DegCre across a set of DEG alpha thesholds to find optimal performance.
 \details{
 This function runs \link{runDegCre} for each value in \code{testedAlphaVals}.
 The performance at each tested alpha is evaluated with \link{degCrePRAUC}.
-which generates a Precision-Recall curve based on the recovery rate of DEGs by associations.
-Various AUCs are calculated as performance metrics. Using the alpha with the highest value of
+which generates a Precision-Recall curve based on the recovery rate of DEGs
+by associations.
+Various AUCs are calculated as performance metrics. Using the alpha with
+the highest value of
 \code{normDeltaAUC} is recommended (see Examples).
 }
 \examples{
-\dontrun{
-# Example usage:
+#Load sample data.
+data(DexNR3C1)
+# Run DegCre over range of alpha values:
 alphaOptList <- optimizeAlphaDegCre(DegGR = DexNR3C1$DegGR,
                            DegP = DexNR3C1$DegGR$pVal,
                            DegLfc = DexNR3C1$DegGR$logFC,
@@ -84,7 +110,6 @@ alphaOptList <- optimizeAlphaDegCre(DegGR = DexNR3C1$DegGR,
 
 bestAlphaId <- which.max(alphaOptList$alphaPRMat[,4])
 bestDegCreResList <- alphaOptList$degCreResListsByAlpha[[bestAlphaId]]
-}
 
 }
 \author{

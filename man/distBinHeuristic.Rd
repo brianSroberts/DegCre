@@ -13,29 +13,45 @@ distBinHeuristic(
 )
 }
 \arguments{
-\item{degCreHits}{A /link[S4Vectors]{Hits} object containing the associations between DEG (Differentially Expressed Genes) and CRE (Cis-Regulatory Element) hits with distances.}
+\item{degCreHits}{A /link[S4Vectors]{Hits} object containing the
+associations between DEG (Differentially Expressed Genes) and CRE
+(Cis-Regulatory Element) hits with distances.}
 
-\item{CreP}{A numeric vector of CRE p-values corresponding to the associations in \code{degCreHits}.}
+\item{CreP}{A numeric vector of CRE p-values corresponding to the
+associations in \code{degCreHits}.}
 
-\item{fracMinKsMedianThresh}{Numeric value from 0 to 1 of the threshold for minimum Kolmogorov-Smirnov (KS) median range. Determines the range of KS statistics considered for optimal bin size. (Default: \code{0.2})}
+\item{fracMinKsMedianThresh}{Numeric value from 0 to 1 of the threshold
+for minimum Kolmogorov-Smirnov (KS) median range. Determines the range of
+KS statistics considered for optimal bin size. (Default: \code{0.2})}
 
-\item{smallestTestBinSize}{Integer minimum number of associations in each test bin. (Default: \code{100})}
+\item{smallestTestBinSize}{Integer minimum number of associations in
+each test bin. (Default: \code{100})}
 
-\item{verbose}{Logical indicating whether to display progress messages. (Default: \code{TRUE})}
+\item{verbose}{Logical indicating whether to display progress messages.
+(Default: \code{TRUE})}
 }
 \value{
 A list containing:
 \describe{
-  \item{pickedBinSize}{The optimal distance bin size selected based on KS statistics.}
-  \item{crePKsMat}{A matrix of distance bin sizes and their corresponding median KS statistics.}
+  \item{pickedBinSize}{The optimal distance bin size selected based on KS
+  statistics.}
+  \item{crePKsMat}{A matrix of distance bin sizes and their corresponding
+  median KS statistics.}
 }
 }
 \description{
-Analyzes the associations between DEG and CRE /link[S4Vectors]{Hits} to determine the optimal distance bin size for further analysis.
+Analyzes the associations between DEG and CRE /link[S4Vectors]{Hits} to
+determine the optimal distance bin size for further analysis.
 }
 \details{
-Not exported. This function analyzes the associations between DEG and CRE hits to determine the optimal distance bin size. It uses Kolmogorov-Smirnov (KS) statistics to assess the difference in distribution between CRE p-values for different distance bin sizes versus the global. The function selects the largest bin size that falls within the specified fraction of the KS median range.
-This function operates within \link{runDegCre} on controlled inputs. It will not run well on unintended inputs.
+Not exported. This function analyzes the associations between DEG and CRE
+hits to determine the optimal distance bin size. It uses Kolmogorov-Smirnov
+(KS) statistics to assess the difference in distribution between CRE
+p-values for different distance bin sizes versus the global. The function
+selects the largest bin size that falls within the specified fraction of
+the KS median range.
+This function operates within \link{runDegCre} on controlled inputs. It
+will not run well on unintended inputs.
 }
 \examples{
 \dontrun{
@@ -51,7 +67,8 @@ selectedBinSize <- optimalBinSize$pickedBinSize
 binStatsMatrix <- optimalBinSize$crePKsMat
 
 # Plot the results:
-plot(binStatsMatrix[, 1], binStatsMatrix[, 2], type = "l", xlab = "Distance Bin Size", ylab = "Median KS Statistic")
+plot(binStatsMatrix[, 1], binStatsMatrix[, 2], type = "l", xlab =
+"Distance Bin Size", ylab = "Median KS Statistic")
 }
 
 }

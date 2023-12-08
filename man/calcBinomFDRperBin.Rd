@@ -7,9 +7,11 @@
 calcBinomFDRperBin(allDistBinsStatsMat, chunkI, alphaVal)
 }
 \arguments{
-\item{allDistBinsStatsMat}{A matrix containing statistics for all distance bins.}
+\item{allDistBinsStatsMat}{A matrix containing statistics for all distance
+bins.}
 
-\item{chunkI}{An integer vector specifying the indices of the current distance bin.}
+\item{chunkI}{An integer vector specifying the indices of the current
+distance bin.}
 
 \item{alphaVal}{Numeric from 0 to 1 of the DEG significance level.}
 }
@@ -17,16 +19,24 @@ calcBinomFDRperBin(allDistBinsStatsMat, chunkI, alphaVal)
 A numeric vector of FDR values for the specified distance bin.
 }
 \description{
-Calculates the False Discovery Rate (FDR) for association probabilities within a given distance bin using a binomial distribution approach.
+Calculates the False Discovery Rate (FDR) for association probabilities
+within a given distance bin using a binomial distribution approach.
 }
 \details{
-Not exported. This function calculates the FDR for association probabilities within a given distance bin. It uses a binomial distribution approach (via \link[stats]{pbinom}) to estimate the FDR based on the number of significant associations and the total number of associations in the bin. Additionally, it adjusts FDR values for associations with low probabilities or ties in the significance ranks.
-It is meant to run within \link{runDegCre}. It will not run well on unintended inputs.
+Not exported. This function calculates the FDR for association probabilities
+within a given distance bin. It uses a binomial distribution approach
+(via \link[stats]{pbinom}) to estimate the FDR based on the number of
+significant associations and the total number of associations in the bin.
+Additionally, it adjusts FDR values for associations with low probabilities
+or ties in the significance ranks.
+It is meant to run within \link{runDegCre}. It will not run well on
+unintended inputs.
 }
 \examples{
 \dontrun{
-# Example usage of the function.
-binomFDR <- calcBinomFDRperBin(allDistBinsStatsMat = myStatsMatrix, chunkI = myChunkIndices, alphaVal = 0.05)
+# Get FDR from binomila distribtuion.
+binomFDR <- calcBinomFDRperBin(allDistBinsStatsMat = myStatsMatrix,
+chunkI = myChunkIndices, alphaVal = 0.05)
 }
 
 }

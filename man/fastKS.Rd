@@ -11,23 +11,30 @@ fastKS(testSet, testIndices, refCumProbs)
 
 \item{testIndices}{Indices of elements in the test set to consider.}
 
-\item{refCumProbs}{Numeric vector representing the pre-computed cumulative probabilities of the reference set.}
+\item{refCumProbs}{Numeric vector representing the pre-computed cumulative
+probabilities of the reference set.}
 }
 \value{
 Numeric value of the KS test statistic.
 }
 \description{
-This function performs a Kolmogorov-Smirnov (KS) test quickly without calculating the p-value. It measures the maximum difference between cumulative probability distributions of a test set and a reference set.
+This function performs a Kolmogorov-Smirnov (KS) test quickly without
+calculating the p-value. It measures the maximum difference between
+cumulative probability distributions of a test set and a reference set.
 }
 \details{
-Not exported. The function compares the cumulative probability distributions of the specified test set to the pre-computed cumulative probabilities of the reference set. It returns the the KS statistic without calculating the p-value (for computational speed).
-It is meant to run within \link{calcKStestStatMedian}. It will not run well on unintended inputs.
+Not exported. The function compares the cumulative probability
+distributions of the specified test set to the pre-computed cumulative
+probabilities of the reference set. It returns the the KS statistic without
+calculating the p-value (for computational speed).
+It is meant to run within \link{calcKStestStatMedian}. It will not run well
+on unintended inputs.
 }
 \examples{
 \dontrun{
 # Example usage of the function.
-ks_stat <- fastKS(testSet = testData, 
-                            testIndices = indices, 
+ks_stat <- fastKS(testSet = testData,
+                            testIndices = indices,
                             refCumProbs = refCumProbs)
 }
 

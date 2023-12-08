@@ -12,29 +12,36 @@ getDistBinNullAssocProb(degCreResList)
 \value{
 A matrix with these columns:
 \describe{
-  \item{binAssocDist}{Numeric value representing the distance bin (TSS to CRE) in base pairs.}
-  \item{nullAssocProb}{Numeric value representing the null association probability of the bin.}
+  \item{binAssocDist}{Numeric value representing the distance bin
+  (TSS to CRE) in base pairs.}
+  \item{nullAssocProb}{Numeric value representing the null association
+  probability of the bin.}
 }
 }
 \description{
-Calculates the null association probability for each distance bin in the DegCre analysis.
+Calculates the null association probability for each distance bin in the
+DegCre analysis.
 }
 \details{
-This function takes the results of the DegCre analysis and computes the null association probability for each unique distance bin. The null association probability represents the expected proportion of differentially expressed genes (DEGs) in each distance bin under the null hypothesis.
+This function takes the results of the DegCre analysis and computes the null
+association probability for each unique distance bin. The null association
+probability represents the expected proportion of differentially expressed
+genes (DEGs) in each distance bin under the null hypothesis.
 }
 \examples{
-\dontrun{
+#' #Load example data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                                   DegP=DexNR3C1$DegGR$pVal,
+                                   DegLfc=DexNR3C1$DegGR$logFC,
+                                   CreGR=DexNR3C1$CreGR,
+                                   CreP=DexNR3C1$CreGR$pVal,
+                                   CreLfc=DexNR3C1$CreGR$logFC)
 
 # Calculate null association probabilities.
 outNullMat <- getDistBinNullAssocProb(degCreResList = degCreResListDexNR3C1)
-}
 
 }
 \author{

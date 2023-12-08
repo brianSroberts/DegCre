@@ -11,23 +11,34 @@ correctAssocProbs(sortHitsDf, assocProbs, refAssocProbs = NULL)
 
 \item{assocProbs}{A numeric vector of association probabilities.}
 
-\item{refAssocProbs}{A numeric vector of reference association probabilities. (Default: \code{NULL}, uses \code{assocProbs} if \code{NULL})}
+\item{refAssocProbs}{A numeric vector of reference association
+probabilities. (Default: \code{NULL}, uses \code{assocProbs} if \code{NULL})}
 }
 \value{
 A numeric vector of corrected association probabilities.
 }
 \description{
-This function corrects association probabilities based on distance bins and reference association probabilities.
+This function corrects association probabilities based on distance bins and
+reference association probabilities.
 }
 \details{
-Not exported. This function corrects association probabilities within the same distance bin based on reference association probabilities in lower distance bins. It calculates adjusted association probabilities and reference association probabilities for each distance bin and updates the original association probabilities accordingly.
-The principle is that for all associations involving a single CRE, those associations to significant DEGs that span the shortest distances should be weighted higher than those that span farther distances. 
-It is meant to run within \link{runDegCre}. It will not run well on unintended inputs.
+Not exported. This function corrects association probabilities within the
+same distance bin based on reference association probabilities in lower
+distance bins. It calculates adjusted association probabilities and
+reference association probabilities for each distance bin and updates the
+original association probabilities accordingly.
+The principle is that for all associations involving a single CRE, those
+associations to significant DEGs that span the shortest distances should be
+weighted higher than those that span farther distances.
+It is meant to run within \link{runDegCre}. It will not run well on
+unintended inputs.
 }
 \examples{
 \dontrun{
-# Example usage of the function.
-correctedProbs <- correctAssocProbs(sortHitsDf = mySortedHits, assocProbs = myAssocProbs, refAssocProbs = myRefAssocProbs)
+# Distance bin correct association probabilities.
+correctedProbs <- correctAssocProbs(sortHitsDf = mySortedHits,
+                                    assocProbs = myAssocProbs,
+                                    refAssocProbs = myRefAssocProbs)
 }
 
 }

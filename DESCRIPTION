@@ -1,12 +1,25 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 0.1.0
-Date: 2023-10-03
-Authors@R: person(given="Brian S.", family="Roberts", email = "broberts@hudsonalpha.org", 
-  role = c("aut", "cre"))
-Maintainer@R: person(given="Brian S.", family="Roberts", email = "broberts@hudsonalpha.org")
-Description: DegCre generates associations between differentially expressed genes (DEGs) and cis-regulatory elements (CREs) based on non-parametric concordance between differential data. The user provides GRanges of DEG TSS and CRE regions with differential p-value and optionally log-fold changes and DegCre returns an annotated Hits object with associations and their calculated probabilities. Additionally, the package provides functionality for visualization and conversion to other formats.
+Version: 0.3.0
+Date: 2023-12-04
+Authors@R: person(given="Brian S.",
+                  family="Roberts",
+                  email = "brianroberts1976@yahoo.com",
+                  role = c("aut", "cre"),
+                  comment=c(ORCID = "0009-0001-2914-6826"))
+Maintainer@R: person(given="Brian S.",
+                     family="Roberts",
+                     email = "brianroberts1976@yahoo.com",
+                     comment=c(ORCID = "0009-0001-2914-6826"))
+Description:
+    DegCre generates associations between differentially expressed genes (DEGs)
+    and cis-regulatory elements (CREs) based on non-parametric concordance 
+    between differential data. The user provides GRanges of DEG TSS and CRE 
+    regions with differential p-value and optionally log-fold changes and 
+    DegCre returns an annotated Hits object with associations and their 
+    calculated probabilities. Additionally, the package provides functionality 
+    for visualization and conversion to other formats.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.3
@@ -34,5 +47,7 @@ Suggests:
     knitr,
     rmarkdown,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
-    TxDb.Mmusculus.UCSC.mm10.knownGene
+    TxDb.Mmusculus.UCSC.mm10.knownGene,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

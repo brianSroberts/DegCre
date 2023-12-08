@@ -9,27 +9,35 @@ plotDegCreBinHeuristic(degCreResList)
 \arguments{
 \item{degCreResList}{A list of DegCre results.}
 }
+\value{
+Invisibly, the picked optimal bin size.
+}
 \description{
-Plots the DegCre distance bin optimization statistic against different bin sizes, highlighting the optimal bin size.
+Plots the DegCre distance bin optimization statistic against different bin
+sizes, highlighting the optimal bin size.
 }
 \details{
-This function takes a DegCre results list and plots the bin heuristic statistics against different bin sizes. It also highlights the optimal bin size chosen based on the analysis.
-The y-axis of the plot is the median KS statistic of all bins versus the global CRE p-value distribution.
+This function takes a DegCre results list and plots the bin heuristic
+statistics against different bin sizes. It also highlights the optimal bin
+size chosen based on the analysis.
+The y-axis of the plot is the median KS statistic of all bins versus the
+global CRE p-value distribution.
 }
 \examples{
-\dontrun{
+#Load example data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                                   DegP=DexNR3C1$DegGR$pVal,
+                                   DegLfc=DexNR3C1$DegGR$logFC,
+                                   CreGR=DexNR3C1$CreGR,
+                                   CreP=DexNR3C1$CreGR$pVal,
+                                   CreLfc=DexNR3C1$CreGR$logFC)
 
 #Plot distance bin median KS statistic curve.
 
 plotDegCreBinHeuristic(degCreResList=degCreResListDexNR3C1)
-}
 
 }
 \seealso{

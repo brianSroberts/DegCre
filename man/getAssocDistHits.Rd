@@ -11,23 +11,35 @@ getAssocDistHits(DegGR, CreGR, maxDist = 1e+06)
 
 \item{CreGR}{A \link[GenomicRanges]{GRanges} object representing the CREs.}
 
-\item{maxDist}{Integer value representing the maximum distance allowed for associations. Regions further apart than this threshold will not be associated. (Default: \code{1e6})}
+\item{maxDist}{Integer value representing the maximum distance allowed for
+associations. Regions further apart than this threshold will not be
+associated. (Default: \code{1e6})}
 }
 \value{
-A Hits object containing associations and their distances between the genomic regions represented by DegGR and CreGR.
+A Hits object containing associations and their distances between
+the genomic regions represented by DegGR and CreGR.
 }
 \description{
-This function finds associations and distances between two sets of genomic regions.
+This function finds associations and distances between two sets of genomic
+regions.
 }
 \details{
-This function identifies associations between genomic regions from two GenomicRanges objects (DegGR and CreGR) based on their spatial overlap within a specified maximum distance threshold using \link[GenomicRanges]{findOverlaps}. It calculates the distances with \link[GenomicRanges]{distance} between associated regions and stores them in the metadata of the /link[S4Vectors]{Hits} object.
+This function identifies associations between genomic regions from two
+GenomicRanges objects (DegGR and CreGR) based on their spatial overlap
+within a specified maximum distance threshold using
+\link[GenomicRanges]{findOverlaps}. It calculates the distances with
+\link[GenomicRanges]{distance} between associated regions and stores them
+in the metadata of the /link[S4Vectors]{Hits} object.
 Large values \code{maxDist} will require more computational resources.
 }
 \examples{
-\dontrun{
-# Example usage of the function.
-hits <- getAssocDistHits(DegGR = DexNR3C1$DegGR, CreGR = DexNR3C1$CreGR, maxDist = 1e6)
-}
+#Load sample data.
+data(DexNR3C1)
+
+# Get hits with association distances.
+hits <- getAssocDistHits(DegGR = DexNR3C1$DegGR,
+                         CreGR = DexNR3C1$CreGR,
+                         maxDist = 1e6)
 
 }
 \author{

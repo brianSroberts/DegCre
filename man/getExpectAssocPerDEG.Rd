@@ -9,44 +9,59 @@ getExpectAssocPerDEG(degCreResList, geneNameColName = NULL, assocAlpha = 0.05)
 \arguments{
 \item{degCreResList}{A list of DegCre results.}
 
-\item{geneNameColName}{Character value of the name of the column in DegGR (that was inputted to \link{runDegCre}) that contains gene names. If NULL, the function will attempt to automatically find the gene name column. (Default: \code{NULL})}
+\item{geneNameColName}{Character value of the name of the column in DegGR
+(that was inputted to \link{runDegCre}) that contains gene names. If NULL,
+the function will attempt to automatically find the gene name column.
+(Default: \code{NULL})}
 
-\item{assocAlpha}{Numeric value from 0 to 1 specifying the significance threshold for associations. (Default: \code{0.05})}
+\item{assocAlpha}{Numeric value from 0 to 1 specifying the significance
+threshold for associations. (Default: \code{0.05})}
 }
 \value{
-A \link[S4Vectors]{DataFrame} with the all data in the input DegGR with these columns added:
+A \link[S4Vectors]{DataFrame} with the all data in the input DegGR
+with these columns added:
 \describe{
-  \item{geneName}{Character values of gene names extracted from \code{geneNameColName} column (or column found if \code{geneNameColName = NULL}) in DegGR.}
+  \item{geneName}{Character values of gene names extracted from
+  \code{geneNameColName} column (or column found if
+  \code{geneNameColName = NULL}) in DegGR.}
   \item{expectAssocs}{Numeric values of the expected associations per gene.}
-  \item{nAssocs}{Integer value of the number of associations passing \code{assocAlpha}  per gene.}
+  \item{nAssocs}{Integer value of the number of associations passing
+  \code{assocAlpha}  per gene.}
   \item{assocAlpha}{Numeric value from 0 to 1 of input \code{assocAlpha}}
-  \item{degAlpha}{Numeric value from 0 to 1 of the significance threshold for DEGs. Obtained from \code{degCreResList}}
+  \item{degAlpha}{Numeric value from 0 to 1 of the significance threshold
+     for DEGs. Obtained from \code{degCreResList}}
 }
 }
 \description{
 Calculates the expected associations per DEG (Differentially Expressed Gene).
 }
 \details{
-This function calculates the expected associations per DEG based on DegCre analysis results. It first filters significant associations based on the provided association significance threshold (\code{assocAlpha}) and then computes the expected associations per gene. The function returns a \link[S4Vectors]{DataFrame} with gene-level information, including expected associations, number of associations, and significance thresholds.
+This function calculates the expected associations per DEG based on DegCre
+analysis results. It first filters significant associations based on the
+provided association significance threshold (\code{assocAlpha}) and then
+computes the expected associations per gene. The function returns a
+\link[S4Vectors]{DataFrame} with gene-level information, including expected
+associations, number of associations, and significance thresholds.
 }
 \examples{
-\dontrun{
+#Load example data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                                   DegP=DexNR3C1$DegGR$pVal,
+                                   DegLfc=DexNR3C1$DegGR$logFC,
+                                   CreGR=DexNR3C1$CreGR,
+                                   CreP=DexNR3C1$CreGR$pVal,
+                                   CreLfc=DexNR3C1$CreGR$logFC)
 
 # Get expected associations per DEG
-expectAssocsDf <- getExpectAssocPerDEG(degCreResList = degCreResListDexNR3C1, 
-                                       geneNameColName = "GeneSymb", 
+expectAssocsDf <- getExpectAssocPerDEG(degCreResList = degCreResListDexNR3C1,
+                                       geneNameColName = "GeneSymb",
                                        assocAlpha = 0.05)
 
 head(expectAssocsDf)
 
-}
 
 }
 \author{

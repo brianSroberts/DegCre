@@ -14,6 +14,7 @@ plotBrowserDegCre(
   assembly = "hg38",
   plotWidth = dev.size("in")[1],
   plotHeight = dev.size("in")[2],
+  plotXbegin = 0.9,
   mergeGenePromotersDist = 1000,
   sigPlotMaxY = 4,
   assocColorRange = NULL,
@@ -33,95 +34,144 @@ plotBrowserDegCre(
 \arguments{
 \item{degCreResList}{List of DegCre results.}
 
-\item{assocAlpha}{Numeric value from 0 to 1 of significance threshold for associations. (Default: \code{0.05})}
+\item{assocAlpha}{Numeric value from 0 to 1 of significance threshold for
+associations. (Default: \code{0.05})}
 
-\item{browserWinPad}{Numeric value of the padding size (in base pairs) to extend the plotting region. (Default: \code{1000})}
+\item{browserWinPad}{Numeric value of the padding size (in base pairs) to
+extend the plotting region. (Default: \code{1000})}
 
-\item{geneName}{Character of name of the gene of interest. If specified, the function will plot the region associated with this gene. (Default: \code{NULL})}
+\item{geneName}{Character of name of the gene of interest. If specified,
+the function will plot the region associated with this gene.
+(Default: \code{NULL})}
 
-\item{plotRegionGR}{\link[GenomicRanges]{GRanges} of length 1 specifying the region to plot. If provided, geneName is ignored. (Default: \code{NULL})}
+\item{plotRegionGR}{\link[GenomicRanges]{GRanges} of length 1 specifying the
+region to plot. If provided, geneName is ignored. (Default: \code{NULL})}
 
-\item{CreSignalName}{Character of name of the differential CRE signal track. For plot labeling purposes only (Default: \code{CRE})}
+\item{CreSignalName}{Character of name of the differential CRE signal track.
+For plot labeling purposes only (Default: \code{CRE})}
 
-\item{assembly}{Character of genome assembly name, e.g., "hg38". Must be one of accepted inputs to \code{assembly} argument to \link[plotgardener]{plotGenomeLabel}. (Default: \code{hg38})}
+\item{assembly}{Character of genome assembly name, e.g., "hg38". Must be one
+of accepted inputs to \code{assembly} argument to
+\link[plotgardener]{plotGenomeLabel}. (Default: \code{hg38})}
 
-\item{plotWidth}{Numeric value of width of the browser plot in inches. (Default: \code{dev.size("in")[1]})}
+\item{plotWidth}{Numeric value of width of the browser plot in inches.
+(Default: \code{dev.size("in")[1]})}
 
-\item{plotHeight}{Numeric value of height of the browser plot in inches. (Default: \code{dev.size("in")[2]})}
+\item{plotHeight}{Numeric value of height of the browser plot in inches.
+(Default: \code{dev.size("in")[2]})}
 
-\item{mergeGenePromotersDist}{Maximum distance (in base pairs) for merging promoters of the same gene in plot. (Default: \code{1000})}
+\item{plotXbegin}{Numeric value of the width of the left margin (where
+track annotations will be) in inches. (Default: \code{0.9})}
 
-\item{sigPlotMaxY}{Numeric value of maximum value for the CRE differential signal plot (Y-axis). (Default: \code{4})}
+\item{mergeGenePromotersDist}{Maximum distance (in base pairs) for merging
+promoters of the same gene in plot. (Default: \code{1000})}
 
-\item{assocColorRange}{Numeric vector of values from 0 to 1 of length 2. These values specify the lower and upper values of DegCre association probabilities for color saturation for arch color. (Default: \code{NULL}. If \code{NULL} will be set to 0 and maximum association probability in input data.)}
+\item{sigPlotMaxY}{Numeric value of maximum value for the CRE differential
+signal plot (Y-axis). (Default: \code{4})}
 
-\item{lowAssocColor}{Character color for low saturation point of association probabilities in arches plot. (Default: \code{#88CCEE})}
+\item{assocColorRange}{Numeric vector of values from 0 to 1 of length 2.
+These values specify the lower and upper values of DegCre association
+probabilities for color saturation for arch color. (Default: \code{NULL}.
+If \code{NULL} will be set to 0 and maximum association probability in
+input data.)}
 
-\item{hiAssocColor}{Character color for high saturation point of association probabilities in arches plot. (Default: \code{#CC6677})}
+\item{lowAssocColor}{Character color for low saturation point of association
+probabilities in arches plot. (Default: \code{#88CCEE})}
 
-\item{signalColor}{Character color for the CRE differential signal plot. (Default: \code{#DDCC77})}
+\item{hiAssocColor}{Character color for high saturation point of association
+probabilities in arches plot. (Default: \code{#CC6677})}
 
-\item{geneLabelFontsize}{Numeric of font size (as implemented in \href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener}) for gene labels. (Default: \code{8})}
+\item{signalColor}{Character color for the CRE differential signal plot.
+(Default: \code{#DDCC77})}
 
-\item{axisFontSize}{Numeric of font size for axis labels and tick marks. (Default: \code{6})}
+\item{geneLabelFontsize}{Numeric of font size (as implemented in
+\href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener})
+for gene labels. (Default: \code{8})}
 
-\item{panelTitleFontSize}{Numeric of font size for panel titles. (Default: \code{7})}
+\item{axisFontSize}{Numeric of font size for axis labels and tick marks.
+(Default: \code{6})}
 
-\item{geneNameColName}{Character of name of the column in DegGR metadata that was inputted to \link{runDegCre} that contains gene names to query by \code{geneName}. (Default: \code{NULL}. If omitted, the column name will be guessed, with errors if not.)}
+\item{panelTitleFontSize}{Numeric of font size for panel titles.
+(Default: \code{7})}
 
-\item{geneHighlightDf}{\link[S4Vectors]{DataFrame} specifying genes to highlight in the plot as accepted by \link[plotgardener]{plotGenes} argument \code{geneHighlights}.}
+\item{geneNameColName}{Character of name of the column in DegGR metadata
+that was inputted to \link{runDegCre} that contains gene names to query by
+\code{geneName}. (Default: \code{NULL}. If omitted, the column name will be
+guessed, with warnings if not.)}
 
-\item{dePrioritizeSmallRNA}{Logical, indicating whether small RNA genes should be deprioritized in plotting. (Default: \code{TRUE})}
+\item{geneHighlightDf}{\link[S4Vectors]{DataFrame} specifying genes to
+highlight in the plot as accepted by \link[plotgardener]{plotGenes} argument
+\code{geneHighlights}.}
 
-\item{useLogFC}{Logical, indicating whether to use log-fold change values for the CRE differential signal. (Default: \code{TRUE})}
+\item{dePrioritizeSmallRNA}{Logical, indicating whether small RNA genes
+should be deprioritized in plotting. (Default: \code{TRUE})}
 
-\item{creSignalBinRes}{Bin resolution in base pairs for the CRE signal track. Only used for initial calculation and will likely differ from display resolution. (Default: \code{100})}
+\item{useLogFC}{Logical, indicating whether to use log-fold change values
+for the CRE differential signal. (Default: \code{TRUE})}
+
+\item{creSignalBinRes}{Bin resolution in base pairs for the CRE signal
+track. Only used for initial calculation and will likely differ from display
+resolution. (Default: \code{100})}
 }
 \value{
 Invisibly, a named list containing:
 \describe{
   \item{plotRegionGR}{\link[GenomicRanges]{GRanges} of the plotted region.}
-  \item{creSignalPlotGR}{\link[GenomicRanges]{GRanges} of the CRE signal (signed negative log CRE p-value) across the plotted region.}
-  \item{assocGinter}{\link[InteractionSet]{GInteractions} of the DegCre associations in the plotted region.}
+  \item{creSignalPlotGR}{\link[GenomicRanges]{GRanges} of the CRE signal
+  (signed negative log CRE p-value) across the plotted region.}
+  \item{assocGinter}{\link[InteractionSet]{GInteractions} of the DegCre
+  associations in the plotted region.}
 }
 }
 \description{
-Creates browser plots of specified genomic regions or gene regions based on the provided DegCre analysis results.
+Creates browser plots of specified genomic regions or gene regions based on
+the provided DegCre analysis results.
 }
 \details{
-This function uses \href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener} functionality to generate browser plots for visualizing DegCre analysis results in specified regions. The user can input genomic regions or gene names.
-The output plot consists of an arches plot made with \link[plotgardener]{plotPairsArches} of DegCre associations colored by association probability.
-Below is a signal track plot made via \link[plotgardener]{plotSignal} of the data in \code{CreGR} that was inputted to \link{runDegCre}.
-This plot displays the signed negative log p-value, meaning the \eqn{-log_{10}(p_{CRE})} multiplied by the sign of the the CRE log fold-change.
-Beneath this panel genomic coordinates via \link[plotgardener]{plotGenomeLabel} and gene models via \link[plotgardener]{plotGenes} are displayed.
+This function uses
+\href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener}
+functionality to generate browser plots for visualizing DegCre analysis
+results in specified regions. The user can input genomic regions or gene
+names.
+The output plot consists of an arches plot made with
+\link[plotgardener]{plotPairsArches} of DegCre associations colored by
+association probability.
+Below is a signal track plot made via \link[plotgardener]{plotSignal} of the
+data in \code{CreGR} that was inputted to \link{runDegCre}.
+This plot displays the signed negative log p-value, meaning the
+\eqn{-log_{10}(p_{CRE})} multiplied by the sign of the the CRE log
+fold-change.
+Beneath this panel genomic coordinates via
+\link[plotgardener]{plotGenomeLabel} and gene models via
+\link[plotgardener]{plotGenes} are displayed.
 }
 \examples{
-\dontrun{
+#Load example data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                                   DegP=DexNR3C1$DegGR$pVal,
+                                   DegLfc=DexNR3C1$DegGR$logFC,
+                                   CreGR=DexNR3C1$CreGR,
+                                   CreP=DexNR3C1$CreGR$pVal,
+                                   CreLfc=DexNR3C1$CreGR$logFC)
 
 #Make browser plot from specified gene name.
 browserOuts <- plotBrowserDegCre(degCreResList=degCreResListDexNR3C1,
-                                geneName="ERRFI1",
-                                geneNameColName="GeneSymb",
-                                CreSignalName="NR3C1")       
+                                 geneName="ERRFI1",
+                                 geneNameColName="GeneSymb",
+                                 CreSignalName="NR3C1")
 dev.off()
 
 #Make plot of specified region.
 zoomGR <- GRanges(seqnames="chr1",ranges=IRanges(start=7900e3,end=8400e3))
 
 zoomedBrowserOuts <- plotBrowserDegCre(degCreResList=degCreResListDexNR3C1,
-                                      plotRegionGR=zoomGR,
+                                       plotRegionGR=zoomGR,
                                        geneNameColName="GeneSymb",
-                                      CreSignalName="NR3C1")
+                                       CreSignalName="NR3C1")
 dev.off()
-
-}
 
 }
 \author{

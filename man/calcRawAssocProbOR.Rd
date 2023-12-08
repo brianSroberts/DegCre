@@ -10,29 +10,35 @@ calcRawAssocProbOR(degCreResList)
 \item{degCreResList}{List of DegCre results.}
 }
 \value{
-A numeric vector of raw association probability odds ratios (OR) for each association.
+A numeric vector of raw association probability odds ratios (OR)
+for each association.
 }
 \description{
-Given a DegCre results list, this function calculates the raw association probability odds ratio (OR) for each association.
+Given a DegCre results list, this function calculates the raw association
+probability odds ratio (OR) for each association.
 }
 \details{
-This function calculates the raw association probability odds ratio (OR) for each association in a DegCre analysis output.
-The OR is calculated relative to the distance bin null association probability, which would happen if all CRE p-values were identical.
-Thus it is a measure of the increase in association probability due to CRE p-value information content over what would occur by random chance.
+This function calculates the raw association probability odds ratio (OR)
+for each association in a DegCre analysis output.
+The OR is calculated relative to the distance bin null association
+probability, which would happen if all CRE p-values were identical.
+Thus it is a measure of the increase in association probability due to
+CRE p-value information content over what would occur by random chance.
 }
 \examples{
-\dontrun{
+#Load test data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                                   DegP=DexNR3C1$DegGR$pVal,
+                                   DegLfc=DexNR3C1$DegGR$logFC,
+                                   CreGR=DexNR3C1$CreGR,
+                                   CreP=DexNR3C1$CreGR$pVal,
+                                   CreLfc=DexNR3C1$CreGR$logFC)
 
 #Calculate raw odds ratio.
 ORvec <- calcRawAssocProbOR(degCreResListDexNR3C1)
-}
 
 }
 \author{

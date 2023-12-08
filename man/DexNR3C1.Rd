@@ -4,12 +4,47 @@
 \name{DexNR3C1}
 \alias{DexNR3C1}
 \title{DegCre input data for examples.}
+\format{
+A named list with two slots: DegGR and CreGR.
+\describe{
+\item{DegGR}{\link[GenomicRanges]{GRanges} of RNA-seq data.
+The coordinates reference TSS sites. It has the following mcols:
+\describe{
+\item{promGeneName}{\href{https://epd.expasy.org/epd}{EPDNew} promoter names}
+\item{GeneSymb}{Gene symbols}
+\item{GeneID}{Ensembl gene ids}
+\item{baseMean}{baseMean values
+from \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}}
+\item{logFC}{Log-2 fold-changes
+from \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}}
+\item{pVal}{P-values
+from \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}}
+\item{pAdj}{Adjusted p-values
+from \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}}
+}
+}
+\item{CreGR}{\link[GenomicRanges]{GRanges} of differntial CRE data.
+The coordinates reference signal regions. It has the following mcols:
+\describe{
+\item{logFC}{Log-2 fold-changes from
+\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+\item{pVal}{P-values from
+\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+\item{pAdj}{Adjusted p-values from
+\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+}
+}
+}
+}
 \description{
 DegCre input data for examples.
 }
 \details{
-This is a list with two slots: \code{DegGR} and \code{CreGR}.
-This data was derived from work by McDowell et al. in which they generated RNA-seq and ChIP-seq data by treating A549 cells with dexamethasone at several time points. Specifically this is RNA-seq and NR3C1 ChIP-seq at four hours versus control.
+This is a list with two slots: DegGR and CreGR.
+This data was derived from work by McDowell et al. in which they generated
+RNA-seq and ChIP-seq data by treating A549 cells with dexamethasone at
+several time points. Specifically this is RNA-seq and NR3C1 ChIP-seq at four
+hours versus control.
 }
 \references{
 \url{https://genome.cshlp.org/content/28/9/1272}

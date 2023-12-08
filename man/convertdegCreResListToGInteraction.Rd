@@ -9,36 +9,50 @@ convertdegCreResListToGInteraction(degCreResList, assocAlpha = 0.05)
 \arguments{
 \item{degCreResList}{List of DegCre results.}
 
-\item{assocAlpha}{The significance threshold for associations to be included in the output (Default: \code{0.05}).}
+\item{assocAlpha}{The significance threshold for associations to be included
+in the output (Default: \code{0.05}).}
 }
 \value{
-A \link[InteractionSet]{GInteractions} object containing the associations that pass the specified significance threshold.
+A \link[InteractionSet]{GInteractions} object containing the
+associations that pass the specified significance threshold.
 
-The \link[InteractionSet]{GInteractions} object has same metadata columns as the \link[S4Vectors]{Hits} returned from \link{runDegCre} with additional columns.
-These additional columns are every metadata column in the input \code{DegGR} or \code{CreGR} proceeded by either \code{Deg_} or \code{Cre_} in the colname.
+The \link[InteractionSet]{GInteractions} object has same metadata columns as
+the \link[S4Vectors]{Hits} returned from \link{runDegCre} with additional
+columns.
+These additional columns are every metadata column in the input \code{DegGR}
+or \code{CreGR} proceeded by either \code{Deg_} or \code{Cre_} in the
+colname.
 }
 \description{
-Given a DegCre results list, this function converts it into a GInteractions object.
+Given a DegCre results list, this function converts it into a GInteractions
+object.
 }
 \details{
-This function takes a DegCre results list as input and extracts the significant associations based on the  \code{assocProbFDR} compared to the specified significance threshold \code{assocAlpha}. It then creates a \link[InteractionSet]{GInteractions} object  metadata columns from the input list.
+This function takes a DegCre results list as input and extracts the
+significant associations based on the  \code{assocProbFDR} compared to the
+specified significance threshold \code{assocAlpha}. It then creates a
+\link[InteractionSet]{GInteractions} object  metadata columns from the input
+list.
 
-If no associations pass the significance threshold, the function returns 'NA' and prints a message.
+If no associations pass the significance threshold, the function returns
+NA' and prints a message.
 }
 \examples{
-\dontrun{
+#Load test data.
+data(DexNR3C1)
+
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-	                      DegP=DexNR3C1$DegGR$pVal,
-	                      DegLfc=DexNR3C1$DegGR$logFC,
-	                      CreGR=DexNR3C1$CreGR,
-	                      CreP=DexNR3C1$CreGR$pVal,
-	                      CreLfc=DexNR3C1$CreGR$logFC)
+                             DegP=DexNR3C1$DegGR$pVal,
+                             DegLfc=DexNR3C1$DegGR$logFC,
+                             CreGR=DexNR3C1$CreGR,
+                             CreP=DexNR3C1$CreGR$pVal,
+                             CreLfc=DexNR3C1$CreGR$logFC)
 
 #Create GInteractions object.
-gInteractions <- 
+gInteractions <-
+ convertdegCreResListToGInteraction(degCreResList=degCreResListDexNR3C1,
                                     assocAlpha = 0.01)
-}
 
 }
 \author{

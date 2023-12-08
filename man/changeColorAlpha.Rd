@@ -7,24 +7,28 @@
 changeColorAlpha(colorVec, newAlpha = 80)
 }
 \arguments{
-\item{colorVec}{Character vector of hexadecimal or named colors to be modified.}
+\item{colorVec}{Character vector of hexadecimal or named colors to be
+modified.}
 
-\item{newAlpha}{Numeric value specifying the new alpha transparency level (0-255) (Default: 80).}
+\item{newAlpha}{Numeric value specifying the new alpha transparency level
+(0-255) (Default: 80).}
 }
 \value{
-A character vector of modified colors with adjusted transparency in hexadecimal.
+A character vector of modified colors with adjusted transparency in
+hexadecimal.
 }
 \description{
 Changes the transparency (alpha channel) of a color or vector of colors.
 }
 \details{
-Not exported. This function takes a color or vector of colors in hexadecimal or named colors and modifies their transparency by changing the alpha channel value. It returns the modified color(s) with the updated transparency.
+Not exported. This function takes a color or vector of colors in
+hexadecimal or named colors and modifies their transparency by changing the
+alpha channel value. It returns the modified color(s) with the updated
+transparency.
 }
 \examples{
-\dontrun{
 # Change transparency of a color
 newColor <- changeColorAlpha(colorVec = "#FF0000", newAlpha = 80)
-}
 
 }
 \author{

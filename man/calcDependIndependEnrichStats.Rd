@@ -13,31 +13,47 @@ calcDependIndependEnrichStats(
 )
 }
 \arguments{
-\item{hitsWithDistDf}{A \link[S4Vectors]{DataFrame} derived from a Hits object.}
+\item{hitsWithDistDf}{A \link[S4Vectors]{DataFrame} derived from a Hits
+object.}
 
-\item{subHitsIndex}{Indices of the row subsets of \code{hitsWithDistDf} to analyze.}
+\item{subHitsIndex}{Indices of the row subsets of \code{hitsWithDistDf} to
+analyze.}
 
-\item{dependPadj}{Numeric vector of adjusted p-values for the dependent data.}
+\item{dependPadj}{Numeric vector of adjusted p-values for the dependent
+data.}
 
 \item{independP}{Numeric vector of p-values for the independent data.}
 
 \item{alpha}{Numeric significance level threshold for DEGs.}
 }
 \value{
-A matrix containing calculated statistics for enrichment analysis, including independent p-values, associated probabilities, and the total number of observations.
+A matrix containing calculated statistics for enrichment analysis,
+including independent p-values, associated probabilities, and the total
+number of observations.
 }
 \description{
-This function calculates enrichment statistics for dependent and independent data based on the provided data frame and parameters.
+This function calculates enrichment statistics for dependent and
+independent data based on the provided data frame and parameters.
 }
 \details{
-Not exported. This function calculates enrichment statistics for dependent and independent data based on provided adjusted p-values for dependent data and p-values for independent data. It computes the associated probabilities, which represent the probability of observing a significant association for each set of data under the specified significance level threshold.
-the independent variable is DegCre calculations is the CreP and the dependent is the DEG adjusted p-values.
-It is meant to run within \link{runDegCre}. It will not run well on unintended inputs.
+Not exported. This function calculates enrichment statistics for dependent
+and independent data based on provided adjusted p-values for dependent data
+and p-values for independent data. It computes the associated probabilities,
+which represent the probability of observing a significant association for
+each set of data under the specified significance level threshold.
+the independent variable is DegCre calculations is the CreP and the
+dependent is the DEG adjusted p-values.
+It is meant to run within \link{runDegCre}. It will not run well on
+unintended inputs.
 }
 \examples{
 \dontrun{
-# Example usage of the function.
-statsMatrix <- calcDependIndependEnrichStats(hitsWithDistDf = myHitsDf, subHitsIndex = mySubHits, dependPadj = myDependPadj, independP = myIndependP, alpha = 0.05)
+# Get stat results.
+statsMatrix <- calcDependIndependEnrichStats(hitsWithDistDf = myHitsDf,
+                                             subHitsIndex = mySubHits,
+                                             dependPadj = myDependPadj,
+                                             independP = myIndependP,
+                                             alpha = 0.05)
 }
 
 }

@@ -7,11 +7,13 @@
 calcKStestStatMedian(testBinSizes, allSortHitIndices, allHitPs)
 }
 \arguments{
-\item{testBinSizes}{A vector of integer values specifying the distance bin sizes to be tested.}
+\item{testBinSizes}{A vector of integer values specifying the distance bin
+sizes to be tested.}
 
 \item{allSortHitIndices}{A vector of sorted hit indices.}
 
-\item{allHitPs}{A numeric vector of p-values corresponding to the associations.}
+\item{allHitPs}{A numeric vector of p-values corresponding to the
+associations.}
 }
 \value{
 A matrix containing two columns:
@@ -21,17 +23,25 @@ A matrix containing two columns:
 }
 }
 \description{
-Calculates the median Kolmogorov-Smirnov (KS) statistic for different distance bin sizes.
+Calculates the median Kolmogorov-Smirnov (KS) statistic for different
+distance bin sizes.
 }
 \details{
-Not exported. This function calculates the median Kolmogorov-Smirnov (KS) statistic for different distance bin sizes. It splits the associations into bins of specified sizes, calculates the KS statistic for each bin, and returns the median KS statistic for each bin size. The KS statistic measures the maximum difference between two cumulative distribution functions, providing a measure of the difference between CRE p-value distributions within each bin and the global distribution.
-It is meant to run within \link{distBinHeuristic}. It will not run well on unintended inputs.
+Not exported. This function calculates the median Kolmogorov-Smirnov
+(KS) statistic for different distance bin sizes. It splits the associations
+into bins of specified sizes, calculates the KS statistic for each bin, and
+returns the median KS statistic for each bin size. The KS statistic
+measures the maximum difference between two cumulative distribution
+functions, providing a measure of the difference between CRE p-value
+distributions within each bin and the global distribution.
+It is meant to run within \link{distBinHeuristic}. It will not run well
+on unintended inputs.
 }
 \examples{
 \dontrun{
 # Example usage:
 binSizes <- c(10000, 5000, 200)
-hitIndices <- c(1:1e5)
+hitIndices <- seq_len(1e5)
 pValues <- runif(1e5)
 
 resultMatrix <- calcKStestStatMedian(testBinSizes = binSizes,

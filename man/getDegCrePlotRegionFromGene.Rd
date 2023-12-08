@@ -14,34 +14,56 @@ getDegCrePlotRegionFromGene(
 \arguments{
 \item{degCreResList}{List of DegCre results.}
 
-\item{geneName}{Character of the name of the gene for which to retrieve associated CRE regions.}
+\item{geneName}{Character of the name of the gene for which to retrieve
+associated CRE regions.}
 
-\item{geneNameColName}{Character specifying the column name for gene names in \code{DegGR}.}
+\item{geneNameColName}{Character specifying the column name for gene names
+in \code{DegGR}.}
 
-\item{assocAlpha}{Numeric value from 0 to 1 specifying the threshold for the association probability FDR (Default: \code{0.05}).}
+\item{assocAlpha}{Numeric value from 0 to 1 specifying the threshold for the
+association probability FDR (Default: \code{0.05}).}
 }
 \value{
-A \link[GenomicRanges]{GRanges} object representing the genomic region encompassing all associated CREs for the specified gene,
+A \link[GenomicRanges]{GRanges} object representing the genomic
+region encompassing all associated CREs for the specified gene,
   or \code{NA} if no associations below the FDR threshold are found.
 }
 \description{
-Given a list of DegCre results, (\code{degCreResList}), this function generates a \link[GenomicRanges]{GRanges} object
-encompassing all associated CRE regions for a specific gene with an associated FDR below a specified threshold.
+Given a list of DegCre results, (\code{degCreResList}), this function
+generates a \link[GenomicRanges]{GRanges} object
+encompassing all associated CRE regions for a specific gene with an
+associated FDR below a specified threshold.
 }
 \details{
-Not exported. This function extracts the relevant components from the input \code{degCreResList} and identifies associations for the
-specified gene with an  association probability FDR below \code{assocAlpha}. If associations are found, it computes
-the genomic range encompassing all associated CREs and returns it as a GenomicRanges object. If no associations meet the
+Not exported. This function extracts the relevant components from the input
+\code{degCreResList} and identifies associations for the
+specified gene with an  association probability FDR below \code{assocAlpha}.
+If associations are found, it computes
+the genomic range encompassing all associated CREs and returns it as a
+GenomicRanges object. If no associations meet the
 threshold, it returns \code{NA}.
-This function is meant to run within \link{plotBrowserDegCre}. It will not run well on unintended inputs.
+This function is meant to run within \link{plotBrowserDegCre}. It will not
+run well on unintended inputs.
 }
 \examples{
 \dontrun{
+#Load example data.
+data(DexNR3C1)
+
+#Generate DegCre results.
+degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
+                         DegP=DexNR3C1$DegGR$pVal,
+                         DegLfc=DexNR3C1$DegGR$logFC,
+                         CreGR=DexNR3C1$CreGR,
+                         CreP=DexNR3C1$CreGR$pVal,
+                         CreLfc=DexNR3C1$CreGR$logFC)
+
 #Get plot region.
-plotRegionGR <- getDegCrePlotRegionFromGene(degCreResList, 
-                                            geneName = "ERRFI1", 
-                                            geneNameColName = "GeneSymb", 
-                                            assocAlpha = 0.05)
+plotRegionGR <-
+ getDegCrePlotRegionFromGene(degCreResList=degCreResListDexNR3C1,
+                             geneName = "ERRFI1",
+                             geneNameColName = "GeneSymb",
+                             assocAlpha = 0.05)
 }
 
 }

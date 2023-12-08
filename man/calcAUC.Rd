@@ -15,18 +15,20 @@ calcAUC(xVals, yVals)
 A numeric value representing the AUC.
 }
 \description{
-Calculates the Area Under the Curve (AUC) for a given set of x and y values using the trapezoidal rule.
+Calculates the Area Under the Curve (AUC) for a given set of x and y values
+using the trapezoidal rule.
 }
 \details{
-Not exported. This function calculates the AUC for a given set of x and y values using the trapezoidal rule. It provides a measure of the area under the curve formed by the x and y values, which is often used to assess the performance of models or the shape of a curve.
+Not exported. This function calculates the AUC for a given set of x and y
+values using the trapezoidal rule. It provides a measure of the area under
+the curve formed by the x and y values, which is often used to assess the
+performance of models or the shape of a curve.
 }
 \examples{
-\dontrun{
-# Example usage of the function.
-x <- c(1:10)
+# Get AUC of quadratic curve.
+x <- seq_len(10)
 y <- x^2
 auc <- calcAUC(x, y)
-}
 
 }
 \author{
