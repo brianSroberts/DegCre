@@ -48,6 +48,32 @@ test_that("runDegCre", {
   expect_equal(calcFDRs,testedExpectedFDRs,tolerance=1e-6)
 })
 
+test_that("optimizeAlphaDegCre", {
+  #Checking the PR AUC vals used to pick optimal DEG alpha
+
+  # bring in test degCre inputs
+  data("DexNR3C1")
+
+  alphaTestSet <- c(0.0005,0.001,0.003,0.005,0.01,0.05,0.1,0.2)
+
+  calcAlphaOptList <- optimizeAlphaDegCre(DegGR=DexNR3C1$DegGR,
+                                          DegP=DexNR3C1$DegGR$pVal,
+                                          DegLfc=DexNR3C1$DegGR$logFC,
+                                          CreGR=DexNR3C1$CreGR,
+                                          CreP=DexNR3C1$CreGR$pVal,
+                                          CreLfc=DexNR3C1$CreGR$logFC,
+                                          testedAlphaVals=alphaTestSet,
+                                          verbose=FALSE)
+
+  testAlphaAUCs <- c(0.008622081,0.008633184,0.009065857,0.009187438,
+                     0.009699195,0.010220304,0.009113340,0.007995100)
+
+  calcAUC <- calcAlphaOptList$alphaPRMat[,2]
+  calcAUC <- unname(calcAUC)
+
+  expect_equal(calcAUC,testAlphaAUCs,tolerance=1e-5)
+})
+
 
 test_that("degCrePRAUC", {
   # Checking invisible return of degCrePRAUC()
