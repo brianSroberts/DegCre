@@ -89,7 +89,7 @@ A named list containing:
   \code{reqEffectDirConcord==TRUE}. Will overwrite existing metadata with
   same colnames.}
 }
-The degCreHits /link[S4Vectors]{Hits} object metadata has these columns:
+The degCreHits \link[S4Vectors]{Hits} object metadata has these columns:
 \describe{
     \item{assocDist}{Integer of distance in base pairs between the TSS and
     CRE for the association.}
