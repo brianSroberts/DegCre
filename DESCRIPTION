@@ -1,7 +1,7 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 0.3.0
+Version: 0.99.0
 Date: 2023-12-04
 Authors@R: person(given="Brian S.",
                   family="Roberts",
