@@ -2,6 +2,19 @@
 
 ## Installation
 
+DegCre can be installed from Bioconductor version 3.18 
+
+(R version 4.2) as follows:
+
+``` r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version = "3.18")
+
+BiocManager::install("DegCre")
+```
+Alternatively, DegCre can be installed from GitHub.
 With the `devtools` pacakge installed, run:
 
 ```r
