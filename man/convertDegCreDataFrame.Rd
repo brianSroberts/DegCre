@@ -56,8 +56,11 @@ outDf <-
                                     assocAlpha = 0.05)
 
 #Write out as text file.
+degCreDfFile <- tempfile(pattern="myDegCreResults",fileext=".tsv")
 
-write.table(outDf,file="myDegCreResults.tsv",sep="\t",row.names=F,quote=F)
+write.table(outDf,file=degCreDfFile[1],sep="\t",row.names=F,quote=F)
+
+unlink(degCreDfFile[1])
 
 }
 \author{
