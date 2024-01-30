@@ -1459,14 +1459,12 @@ calcBinomFDRperBin <- function(allDistBinsStatsMat, chunkI, alphaVal) {
       binomFDRX[maskInTop10NonNull] <- lowerEndFDR
   }
   
-  # Also, all adjAssocProbs of 0 in the 10 lowest CrePs should get FDR of 1
+  # Also, all adjAssocProbs of 0 should get FDR of 1
+  #sometimes they don't because of weirdness with binom calc
+  #this happens when many or all assocProb are 0
   maskZero <- which(chunkAdjAsscProbX == 0)
-  zeroCrepRanks <- crepRanks[maskZero]
-  rank10Zero <- sort(zeroCrepRanks)[10]
   
-  maskInZeroTop10 <- which(crepRanks <= rank10Zero)
-  
-  binomFDRX[intersect(maskZero, maskInZeroTop10)] <- 1
+  binomFDRX[maskZero] <- 1
   
   return(binomFDRX)
 }
