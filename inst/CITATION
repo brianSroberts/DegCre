@@ -1,7 +1,6 @@
 citHeader("To cite DegCre in publications use:")
 
-citEntry(
-  entry    = "Preprint",
+citEntry(entry = "Preprint",
   title    = "DegCre: Probabilistic association of differential gene expression with regulatory regions",
   author   = personList(as.person("Brian S. Roberts"),
                         as.person("Gregory M. Cooper"),
@@ -12,5 +11,4 @@ citEntry(
   doi = "10.1101/2023.10.04.560923",
   textVersion = paste("Brian S. Roberts, Gregory M. Coope, Richard M. Myers,
   DegCre: Probabilistic association of differential gene expression with regulatory regions, bioRxiv, 
-  2023")
-)
+  2023") )

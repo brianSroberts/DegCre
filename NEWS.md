@@ -1,3 +1,7 @@
+# CHANGES IN VERSION 0.99.1
+##BUG FIXES
+*Fixed `calcBinomFDRperBin` to give FDR = 1 for 0 assocProbs in top 10 CRE p-values.
+
 # CHANGES IN VERSION 0.99.0
 ## BUG FIXES
 

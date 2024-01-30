@@ -1457,17 +1457,17 @@ calcBinomFDRperBin <- function(allDistBinsStatsMat, chunkI, alphaVal) {
       lowerEndFDR <- min(binomFDRX[maskInTop10])
 
       binomFDRX[maskInTop10NonNull] <- lowerEndFDR
-
-      # Also, all adjAssocProbs of 0 in the 10 lowest CrePs should get FDR of 1
-      maskZero <- which(chunkAdjAsscProbX == 0)
-      zeroCrepRanks <- crepRanks[maskZero]
-      rank10Zero <- sort(zeroCrepRanks)[10]
-
-      maskInZeroTop10 <- which(crepRanks <= rank10Zero)
-
-      binomFDRX[intersect(maskZero, maskInZeroTop10)] <- 1
-
   }
+  
+  # Also, all adjAssocProbs of 0 in the 10 lowest CrePs should get FDR of 1
+  maskZero <- which(chunkAdjAsscProbX == 0)
+  zeroCrepRanks <- crepRanks[maskZero]
+  rank10Zero <- sort(zeroCrepRanks)[10]
+  
+  maskInZeroTop10 <- which(crepRanks <= rank10Zero)
+  
+  binomFDRX[intersect(maskZero, maskInZeroTop10)] <- 1
+  
   return(binomFDRX)
 }
 
@@ -1490,11 +1490,12 @@ calcBinomFDRperBin <- function(allDistBinsStatsMat, chunkI, alphaVal) {
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' # Get AUC of quadratic curve.
 #' x <- seq_len(10)
 #' y <- x^2
 #' auc <- calcAUC(x, y)
-#'
+#' }
 #' @author Brian S. Roberts
 #'
 calcAUC <- function(xVals, yVals) {
