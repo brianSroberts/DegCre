@@ -25,11 +25,12 @@ the curve formed by the x and y values, which is often used to assess the
 performance of models or the shape of a curve.
 }
 \examples{
+\dontrun{
 # Get AUC of quadratic curve.
 x <- seq_len(10)
 y <- x^2
 auc <- calcAUC(x, y)
-
+}
 }
 \author{
 Brian S. Roberts
