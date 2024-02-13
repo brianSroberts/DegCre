@@ -1,15 +1,27 @@
+# CHANGES IN VERSION 0.99.3
+## BUG FIXES
+
+* Set all non-exported functions to not run examples.
+* Fixed vignette code.
+
+## NEW FEATURES
+
+* `getAssocDistHits` is now exported.
+
 # CHANGES IN VERSION 0.99.2
 ## BUG FIXES
-*Fixed calcAUC.Rd to not run example.
+
+* Fixed calcAUC.Rd to not run example.
 
 # CHANGES IN VERSION 0.99.1
 ## BUG FIXES
-*Fixed `calcBinomFDRperBin` to give FDR = 1 for 0 assocProbs in top 10 CRE p-values.
+
+* Fixed `calcBinomFDRperBin` to give FDR = 1 for 0 assocProbs in top 10 CRE p-values.
 
 # CHANGES IN VERSION 0.99.0
 ## BUG FIXES
 
-*Added missing unit test for `optimizeAlphaDegCre`
+* Added missing unit test for `optimizeAlphaDegCre`
 
 # CHANGES IN VERSION 0.3.0
 ## NEW FEATURES

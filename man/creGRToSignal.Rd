@@ -49,6 +49,7 @@ if specified, log-fold change values. It then converts these values into a
 signed -log p-value in the \code{signal} metadata column.
 }
 \examples{
+\dontrun{
 #Load example data.
 data(DexNR3C1)
 
@@ -58,6 +59,7 @@ myPlotRegionGR <- GRanges(seqnames="chr4",
 
 # Convert CRE data to a pseudo-continuous signal
 creSignalGR <- creGRToSignal(CreGR=myCreGR, plotRegionGR=myPlotRegionGR)
+}
 
 }
 \author{

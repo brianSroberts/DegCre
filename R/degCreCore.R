@@ -1151,6 +1151,7 @@ fastKS <- function(testSet, testIndices, refCumProbs) {
 #'
 #' @author Brian S. Roberts
 #'
+#' @export
 getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
   hitsPromsToCRE <- GenomicRanges::findOverlaps(DegGR, CreGR, maxgap = maxDist,
                                                 ignore.strand = TRUE)

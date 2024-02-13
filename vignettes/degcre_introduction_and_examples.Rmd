@@ -213,7 +213,7 @@ par(bty="l")
 degCrePRAUC(degCreResList=bestDegCreResList)
 ```
 The black line is the performance of the DegCre associations and the red 
-regions in values obtained from random shuffles.
+region is values obtained from random shuffles.
 
 ## 4 Obtaining the number of associations per DEG
 
@@ -279,8 +279,7 @@ zoomGR <- GRanges(seqnames="chr1",
 We then supply the `GRanges` to the `plotRegionGR` argument of 
 `plotBrowserDegCre()`:
 
-```{r plot browser2, echo=TRUE, dpi=200, fig.height=2, fig.width=3.5, 
-message=FALSE, warning=FALSE, fig.align='center'}
+```{r plot browser2, echo=TRUE, dpi=200, fig.height=2, fig.width=3.5, message=FALSE, warning=FALSE, fig.align='center'}
 zoomBrowserOuts <- plotBrowserDegCre(degCreResList=bestDegCreResList,
                                                    plotRegionGR=zoomGR,
                                                    geneNameColName="GeneSymb",
@@ -302,8 +301,7 @@ geneHighDf[which(geneHighDf$gene=="ERRFI1"),2] <- "black"
 
 Then `geneHighDf` is supplied to the `geneHighlightDf` argument to produce:
 
-```{r plot browser3, echo=TRUE, dpi=200, fig.height=2, fig.width=3.5, 
-message=FALSE, warning=FALSE, fig.align='center'}
+```{r plot browser3, echo=TRUE, dpi=200, fig.height=2, fig.width=3.5, message=FALSE, warning=FALSE, fig.align='center'}
 highLightBrowserOuts <- plotBrowserDegCre(degCreResList=bestDegCreResList,
                                           plotRegionGR=zoomGR,
                                           CreSignalName="NR3C1",

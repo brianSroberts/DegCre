@@ -381,6 +381,7 @@ getDistBinNullAssocProb <- function(degCreResList) {
 #'
 #' @author Brian S. Roberts
 #'
+#' @export
 changeColorAlpha <- function(colorVec, newAlpha = 80) {
     transColX <- unlist(lapply(colorVec,function(charFillColX){
         rgbX <- as.numeric(col2rgb(charFillColX))

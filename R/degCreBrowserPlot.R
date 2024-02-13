@@ -487,6 +487,7 @@ plotBrowserDegCre <- function(degCreResList,
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' #Load example data.
 #' data(DexNR3C1)
 #'
@@ -496,6 +497,7 @@ plotBrowserDegCre <- function(degCreResList,
 #'
 #' # Convert CRE data to a pseudo-continuous signal
 #' creSignalGR <- creGRToSignal(CreGR=myCreGR, plotRegionGR=myPlotRegionGR)
+#' }
 #'
 #' @author Brian S. Roberts
 #'
