@@ -1,7 +1,7 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 0.99.4
+Version: 0.99.5
 Date: 2024-01-30
 Authors@R: person(given="Brian S.",
                   family="Roberts",
@@ -51,3 +51,4 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+BugReports: https://github.com/brianSroberts/DegCre/issues

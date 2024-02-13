@@ -91,6 +91,7 @@
 #'   associations in the plotted region.}
 #' }
 #' @examples
+#' library(GenomicRanges)
 #' #Load example data.
 #' data(DexNR3C1)
 #'
@@ -110,7 +111,8 @@
 #' dev.off()
 #'
 #' #Make plot of specified region.
-#' zoomGR <- GRanges(seqnames="chr1",ranges=IRanges(start=7900e3,end=8400e3))
+#' zoomGR <- GenomicRanges::GRanges(seqnames="chr1",
+#'                                  ranges=IRanges(start=7900e3,end=8400e3))
 #'
 #' zoomedBrowserOuts <- plotBrowserDegCre(degCreResList=degCreResListDexNR3C1,
 #'                                        plotRegionGR=zoomGR,
