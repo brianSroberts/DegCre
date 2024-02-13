@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.4
+## BUG FIXES
+
+* Fixed F to FALSE in example
+
 # CHANGES IN VERSION 0.99.3
 ## BUG FIXES
 

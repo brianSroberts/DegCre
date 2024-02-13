@@ -209,7 +209,7 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 #' #Write out as text file.
 #' degCreDfFile <- tempfile(pattern="myDegCreResults",fileext=".tsv")
 #'
-#' write.table(outDf,file=degCreDfFile[1],sep="\t",row.names=F,quote=F)
+#' write.table(outDf,file=degCreDfFile[1],sep="\t",row.names=FALSE,quote=FALSE)
 #'
 #' unlink(degCreDfFile[1])
 #'
