@@ -1,37 +1,39 @@
 test_that("runDegCre", {
-  # bring in test input data
+  library(GenomicRanges)
+  # bring in test degCre inputs
   data("DexNR3C1")
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
 
   # get runDegCre results with defaults.
-  degCreResList <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                             DegP=DexNR3C1$DegGR$pVal,
-                             DegLfc=DexNR3C1$DegGR$logFC,
-                             CreGR=DexNR3C1$CreGR,
-                             CreP=DexNR3C1$CreGR$pVal,
-                             CreLfc=DexNR3C1$CreGR$logFC)
+  degCreResList <- DegCre::runDegCre(DegGR=subDegGR,
+                             DegP=subDegGR$pVal,
+                             DegLfc=subDegGR$logFC,
+                             CreGR=subCreGR,
+                             CreP=subCreGR$pVal,
+                             CreLfc=subCreGR$logFC)
 
   ## test results
 
   # DegCre list should have 5 slots
   expect_length(degCreResList,5)
 
-  # DegCre Hits object should be 779231 hits long for this input
-  expect_length(degCreResList$degCreHits,779231)
+  # DegCre Hits object should be 34169 hits long for this input
+  expect_length(degCreResList$degCreHits,34169)
 
   # Check the picked distance bin size
-  expect_equal(degCreResList$binHeurOutputs$pickedBinSize,3896)
+  expect_equal(degCreResList$binHeurOutputs$pickedBinSize,2277)
 
   # Spot check selected association probs
   # These values were selected to test the dynamic range of non-zero
   # association probs and are thus the high end of the distribution
   # (95% and higher)
 
-  testedIndices <- c(540187,12655,13784,34542,797,11790,288558,18858,160113,
-                     107838)
+  testedIndices <- c(7302,11035,18862,25135,28662,30311)
 
-  testedExpectedAssocProbs <- c(0.01654992,0.04539301,0.10392967,0.13274637,
-                                0.16119667,0.22697005,0.29432432,0.35007605,
-                                0.41441860,0.99000000)
+  testedExpectedAssocProbs <- c(0.42593023,0.10610199,0.49500000,0.21796426,
+                                0.21796426,0.07869565)
 
   calcAssocProbs <- mcols(degCreResList$degCreHits)$assocProb[testedIndices]
 
@@ -40,8 +42,8 @@ test_that("runDegCre", {
   # Spot check selected assocProbFDRs. These are selected from the same indices
   # as testedExpectedAssocProbs
 
-  testedExpectedFDRs <-
-    mcols(degCreResList$degCreHits)$assocProbFDR[testedIndices]
+  testedExpectedFDRs <- c(3.337349e-07,6.083834e-01,6.029520e-04,
+                          2.619634e-03,2.282431e-03,4.860181e-01)
 
   calcFDRs <- mcols(degCreResList$degCreHits)$assocProbFDR[testedIndices]
 
@@ -50,23 +52,28 @@ test_that("runDegCre", {
 
 test_that("optimizeAlphaDegCre", {
   #Checking the PR AUC vals used to pick optimal DEG alpha
-
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
 
-  alphaTestSet <- c(0.0005,0.001,0.003,0.005,0.01,0.05,0.1,0.2)
+  alphaTestSet <- c(0.001,0.003,0.005,0.01,0.05,0.1)
 
-  calcAlphaOptList <- optimizeAlphaDegCre(DegGR=DexNR3C1$DegGR,
-                                          DegP=DexNR3C1$DegGR$pVal,
-                                          DegLfc=DexNR3C1$DegGR$logFC,
-                                          CreGR=DexNR3C1$CreGR,
-                                          CreP=DexNR3C1$CreGR$pVal,
-                                          CreLfc=DexNR3C1$CreGR$logFC,
+  calcAlphaOptList <- optimizeAlphaDegCre(DegGR=subDegGR,
+                                          DegP=subDegGR$pVal,
+                                          DegLfc=subDegGR$logFC,
+                                          CreGR=subCreGR,
+                                          CreP=subCreGR$pVal,
+                                          CreLfc=subCreGR$logFC,
                                           testedAlphaVals=alphaTestSet,
                                           verbose=FALSE)
+  
+  
 
-  testAlphaAUCs <- c(0.008622081,0.008633184,0.009065857,0.009187438,
-                     0.009699195,0.010220304,0.009113340,0.007995100)
+  testAlphaAUCs <- c(0.01915195,0.02240950,0.02226499,0.02358739,
+                     0.02764595,0.02628054)
 
   calcAUC <- calcAlphaOptList$alphaPRMat[,2]
   calcAUC <- unname(calcAUC)
@@ -77,16 +84,19 @@ test_that("optimizeAlphaDegCre", {
 
 test_that("degCrePRAUC", {
   # Checking invisible return of degCrePRAUC()
-
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
 
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # Capture the plot produced by the function
@@ -111,9 +121,9 @@ test_that("degCrePRAUC", {
   expect_equal(dim(testPrAUCList$shuffTprQMat),c(200,3))
   expect_equal(dim(testPrAUCList$shuffPpvQMat),c(200,3))
 
-  expect_equal(testPrAUCList$AUC,0.009699195,tolerance=1e-6)
+  expect_equal(testPrAUCList$AUC,0.02358739,tolerance=1e-6)
 
   # must have low tolreance for normDeltaAUC because it is compared to
   # a null distribution created by random sampling
-  expect_equal(testPrAUCList$normDeltaAUC,0.006629568,tolerance=1e-2)
+  expect_equal(testPrAUCList$normDeltaAUC,0.01573533,tolerance=1e-2)
 })

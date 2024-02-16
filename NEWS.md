@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.7
+## BUG FIXES
+
+* Changed test functions to run on chr1 only for efficiency.
+
 # CHANGES IN VERSION 0.99.6
 ## BUG FIXES
 

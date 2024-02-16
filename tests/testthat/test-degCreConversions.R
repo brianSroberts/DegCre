@@ -1,49 +1,54 @@
 test_that("calcRawAssocProbOR", {
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
 
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   calcORvec <- calcRawAssocProbOR(degCreResListDexNR3C1)
 
   # indices are based on top quantiles of assocProb
-  testedIndices <- c(540187,12655,13784,34542,797,11790,288558,18858,160113,
-                     107838)
+  testedIndices <- c(881,1003,15715,18745,19170,29471)
 
-  testORs <- c(1.0000000,0.9708563,1.0000000,1.3783743,1.2893615,1.8154621,
-               2.6749891,3.2723824,4.7409410,17.0131004)
+  testORs <- c(3.044118,3.672581,3.044118,2.611239,2.611239,3.373333)
 
   expect_equal(calcORvec[testedIndices],testORs,tolerance=1e-5)
 })
 
 
 test_that("convertdegCreResListToGInteraction", {
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   calcGInter <-
     convertdegCreResListToGInteraction(degCreResList=degCreResListDexNR3C1)
 
   #pick subset of assocProb that span the range
-  testGInterIndices <- c(1592,1486,1600,1243,2831,663,2604,2429,851,1001,1773)
+  testGInterIndices <- c(40,59,10,22,373,555)
 
-  testGInterAssocProbs <- c(0.04196739,0.06374245,0.06992565,0.07557252,
-                            0.08150943,0.08985149,0.09997649,0.11765525,
-                            0.14480226,0.20435780,0.99000000)
+  testGInterAssocProbs <- c(0.2368760,0.3641969,0.3611066,0.1606195,
+                            0.4950000,0.2842414)
 
   expect_equal(mcols(calcGInter)$assocProb[testGInterIndices],
                testGInterAssocProbs,
@@ -66,26 +71,28 @@ test_that("convertdegCreResListToGInteraction", {
 
 
 test_that("convertDegCreDataFrame", {
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
 
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   degCreDf <- convertDegCreDataFrame(degCreResList=degCreResListDexNR3C1,
                                      assocAlpha = 0.05)
 
   #pick subset of assocProb that span the range
-  testIndices <- c(1592,1486,1600,1243,2831,663,2604,2429,851,1001,1773)
+  testIndices <- c(57,231,358,401,477)
 
-  testAssocProbs <- c(0.04196739,0.06374245,0.06992565,0.07557252,
-                            0.08150943,0.08985149,0.09997649,0.11765525,
-                            0.14480226,0.20435780,0.99000000)
+  testAssocProbs <- c(0.2368760,0.2842414,0.1607254,0.4950000,0.3641969)
 
   expect_equal(degCreDf$assocProb[testIndices],
                testAssocProbs,

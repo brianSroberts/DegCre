@@ -1,14 +1,18 @@
 test_that("plotDegCreBinHeuristics", {
 
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # run plotDegCreBinHeuristic and check plot
@@ -26,22 +30,26 @@ test_that("plotDegCreBinHeuristics", {
   # Clean up the temporary plot file
   unlink(pdf_file)
 
-  testPickBin <- 3896
+  testPickBin <- 2277
   names(testPickBin) <- "distBinSize"
   expect_equal(calcPickBin,testPickBin)
 })
 
 test_that("plotDegCreAssocProbVsDist", {
 
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # run plotDegCreAssocProbVsDist and check plot
@@ -61,32 +69,36 @@ test_that("plotDegCreAssocProbVsDist", {
   unlink(pdf_file)
 
   # check assocDistMat
-  testRows <-c(37,18,5,180,64,160,55,17,57,15)
-  testMedians <- c(0.07221322,0.11525735,0.19435583,0.08991211,0.09245690,
-                   0.06187500,0.08176129,0.09222222,0.06708419,0.10704815)
+  testRows <-c(1,3,5,10,12,16)
+  testMedians <- c(0.27720000,0.14430000,0.10913043,0.10129344,0.07563284,
+                   0.08984293)
 
   expect_equal(assocDistMat[testRows,3],testMedians,tolerance=1e-5)
 })
 
 test_that("getDistBinNullAssocProb", {
 
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # run getDistBinNullAssocProb
   calcNullMat <- getDistBinNullAssocProb(degCreResList = degCreResListDexNR3C1)
 
-  testRows <- c(74,158,91,183,23,143,149,3,90,130)
-  testNullProbs <- c(0.05437885,0.04929671,0.04980493,0.04497690,0.05996920,
-                     0.05310832,0.06301848,0.10392967,0.07521561,0.05691992)
+  testRows <- c(1,2,4,6,12,14,16)
+  testNullProbs <- c(0.18956522,0.12826087,0.12695652,0.10565217,0.06739130,
+                     0.07521739,0.08984293)
 
   expect_equal(calcNullMat[testRows,2],testNullProbs,tolerance=1e-5)
 })

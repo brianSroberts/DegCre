@@ -1,14 +1,17 @@
 test_that("plotBrowserDegCre", {
-
   # bring in test degCre inputs
+  library(GenomicRanges)
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # run plotDegCreAssocProbVsDist and check plot
@@ -32,7 +35,7 @@ test_that("plotBrowserDegCre", {
   # check outputs
   # Check CRE signal score converted to a dense GRanges for plotting
   testPlotRegionDf <- data.frame(chr="chr1",
-                                 start=7264791,
+                                 start=7302483,
                                  end=9293894)
   testPlotRegionGR <- makeGRangesFromDataFrame(testPlotRegionDf)
 
@@ -40,18 +43,17 @@ test_that("plotBrowserDegCre", {
               "plotRegionGR should be as expected")
 
   testSignalIndices <- c(98,92,3,21,44,90,5,55,37,82)
-  testSignalScores <- c(-2.895593e-04,-8.009457e-05,3.268266e-05,5.022616e-05,
-                        3.727415e+00,1.753670e+00,4.324037e-05,-9.424158e-05,
-                        5.196334e+00,-3.871754e-05)
+  testSignalScores <- c(-5.331180e-05,1.434569e-05,9.994705e-05,1.475679e-04,
+                        3.488836e+00,1.753670e+00,2.638824e+00,
+                        2.115627e+00,3.053984e+00,5.928976e-05)
 
   expect_equal(calcBrowserOuts$creSignalPlotGR$score[testSignalIndices],
                testSignalScores,tolerance=1e-4)
 
   # Check values in calcBrowserOuts$assocGinter
-  testBrowserGInIndices <- c(4,10,12,9,5,3,7,13,21,19)
-  testBrowserGInAssocProbs <- c(0.42923077,0.19349146,0.11880000,0.13860000,
-                                0.20915493,0.24750000,0.66000000,0.37125000,
-                                0.06223495,0.16500000)
+  testBrowserGInIndices <- c(1,3,6,9,10,11,17,19)
+  testBrowserGInAssocProbs <- c(0.07096774,0.44448980,0.27720000,0.21300203,
+                                0.09838509,0.39600000,0.35255396,0.30697674)
 
   expect_equal(mcols(calcBrowserOuts$assocGinter)$assocProb[testBrowserGInIndices],
                testBrowserGInAssocProbs,tolerance=1e-5)

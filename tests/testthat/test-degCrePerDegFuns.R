@@ -1,13 +1,17 @@
 test_that("getExpectAssocPerDEG", {
+  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   #run getExpectAssocPerDEG
@@ -15,12 +19,12 @@ test_that("getExpectAssocPerDEG", {
     getExpectAssocPerDEG(degCreResList = degCreResListDexNR3C1,
                          geneNameColName = "GeneSymb")
 
-  expect_equal(dim(calcExpectAssocPerDegDf),c(15644,11))
+  expect_equal(dim(calcExpectAssocPerDegDf),c(1616,11))
 
   # test at randomly sampled indices across non-trivial expectAssocs
-  testedIndices <- c(313,91,198,5,422,52,195,176,354,269)
-  testExpectAssocs <- c(1.0101684,3.6963609,2.0376538,11.4674811,0.1317811,
-                        5.3510017,2.0764307,2.3116513,0.6852296,1.4027410)
+  testedIndices <- c(1,3,9,12,28,35,59)
+  testExpectAssocs <- c(9.6110849,6.3562721,4.8618757,3.9276794,2.0172421,
+                        1.5680273,0.1382713)
 
   calcExpectAssocs <- calcExpectAssocPerDegDf$expectAssocs[testedIndices]
 
@@ -29,14 +33,19 @@ test_that("getExpectAssocPerDEG", {
 
 test_that("plotExpectedAssocsPerDeg", {
   # bring in test degCre inputs
+  library(GenomicRanges)
+  # bring in test degCre inputs
   data("DexNR3C1")
-
-  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=DexNR3C1$DegGR,
-                                             DegP=DexNR3C1$DegGR$pVal,
-                                             DegLfc=DexNR3C1$DegGR$logFC,
-                                             CreGR=DexNR3C1$CreGR,
-                                             CreP=DexNR3C1$CreGR$pVal,
-                                             CreLfc=DexNR3C1$CreGR$logFC,
+  
+  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  
+  degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
+                                             DegP=subDegGR$pVal,
+                                             DegLfc=subDegGR$logFC,
+                                             CreGR=subCreGR,
+                                             CreP=subCreGR$pVal,
+                                             CreLfc=subCreGR$logFC,
                                              verbose=FALSE)
 
   # run getExpectAssocPerDEG and check plot
@@ -46,7 +55,9 @@ test_that("plotExpectedAssocsPerDeg", {
   calcExpectAssocPerDegDf <-
     getExpectAssocPerDEG(degCreResList = degCreResListDexNR3C1,
                          geneNameColName = "GeneSymb")
-
+  
+  medianExpAssocs <- plotExpectedAssocsPerDeg(calcExpectAssocPerDegDf)
+  
   dev.off()
 
   # Check if the plot file was created
@@ -56,7 +67,7 @@ test_that("plotExpectedAssocsPerDeg", {
   # Clean up the temporary plot file
   unlink(pdf_file)
 
-  calcMedianExpectAssocs <- plotExpectedAssocsPerDeg(calcExpectAssocPerDegDf)
+  calcMedianExpectAssocs <- medianExpAssocs
 
-  expect_equal(calcMedianExpectAssocs,1.421911,tolerance=1e-6)
+  expect_equal(calcMedianExpectAssocs,1.260031,tolerance=1e-6)
 })
