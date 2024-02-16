@@ -79,15 +79,19 @@ be concordant between the changes in gene expression and CRE signal, users must
 data(DexNR3C1)
 lapply(DexNR3C1,head)
 ```
-We now run DegCre on this data with default values:
+We now run DegCre on this data with default values (subsetting input to "chr1" 
+for expediency):
 
 ```{r demo DegCre default}
-myDegCreResList <- runDegCre(DegGR=DexNR3C1$DegGR,
-                             DegP=DexNR3C1$DegGR$pVal,
-                             DegLfc=DexNR3C1$DegGR$logFC,
-                             CreGR=DexNR3C1$CreGR,
-                             CreP=DexNR3C1$CreGR$pVal,
-                             CreLfc=DexNR3C1$CreGR$logFC,
+subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+
+myDegCreResList <- runDegCre(DegGR=subDegGR,
+                             DegP=subDegGR$pVal,
+                             DegLfc=subDegGR$logFC,
+                             CreGR=subCreGR,
+                             CreP=subCreGR$pVal,
+                             CreLfc=subCreGR$logFC,
                              reqEffectDirConcord=TRUE,
                              verbose=FALSE)
 ```
@@ -136,12 +140,12 @@ finding the value that maximizes a normalized Precision-Recall Area Under
 the Curve (AUC):
 
 ```{r demo Alpha opt}
-alphaOptList <- optimizeAlphaDegCre(DegGR=DexNR3C1$DegGR,
-                                    DegP=DexNR3C1$DegGR$pVal,
-                                    DegLfc=DexNR3C1$DegGR$logFC,
-                                    CreGR=DexNR3C1$CreGR,
-                                    CreP=DexNR3C1$CreGR$pVal,
-                                    CreLfc=DexNR3C1$CreGR$logFC,
+alphaOptList <- optimizeAlphaDegCre(DegGR=subDegGR,
+                                    DegP=subDegGR$pVal,
+                                    DegLfc=subDegGR$logFC,
+                                    CreGR=subCreGR,
+                                    CreP=subCreGR$pVal,
+                                    CreLfc=subCreGR$logFC,
                                     reqEffectDirConcord=TRUE,
                                     verbose=FALSE)
 

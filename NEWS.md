@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.6
+## BUG FIXES
+
+* Changed examples to run on chr1 for computational efficiency.
+
 # CHANGES IN VERSION 0.99.4
 ## BUG FIXES
 

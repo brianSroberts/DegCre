@@ -43,13 +43,16 @@ associations per DEG.
 #Load example data.
 data(DexNR3C1)
 
+subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
+subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+
 #Generate DegCre results.
-degCreResListDexNR3C1 <- runDegCre(DegGR=DexNR3C1$DegGR,
-                                   DegP=DexNR3C1$DegGR$pVal,
-                                   DegLfc=DexNR3C1$DegGR$logFC,
-                                   CreGR=DexNR3C1$CreGR,
-                                   CreP=DexNR3C1$CreGR$pVal,
-                                   CreLfc=DexNR3C1$CreGR$logFC)
+degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
+                                   DegP=subDegGR$pVal,
+                                   DegLfc=subDegGR$logFC,
+                                   CreGR=subCreGR,
+                                   CreP=subCreGR$pVal,
+                                   CreLfc=subCreGR$logFC)
 
 # Generate data frame of expected associations per DEG
 expectAssocPerDegDf <-
