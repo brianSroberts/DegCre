@@ -1,10 +1,11 @@
 test_that("runDegCre", {
-  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
   
-  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  subDegGR <- 
+    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+  subCreGR <- 
+    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   # get runDegCre results with defaults.
   degCreResList <- DegCre::runDegCre(DegGR=subDegGR,
@@ -52,12 +53,13 @@ test_that("runDegCre", {
 
 test_that("optimizeAlphaDegCre", {
   #Checking the PR AUC vals used to pick optimal DEG alpha
-  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
   
-  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  subDegGR <- 
+    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+  subCreGR <- 
+    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   alphaTestSet <- c(0.001,0.003,0.005,0.01,0.05,0.1)
 
@@ -84,12 +86,13 @@ test_that("optimizeAlphaDegCre", {
 
 test_that("degCrePRAUC", {
   # Checking invisible return of degCrePRAUC()
-  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
   
-  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  subDegGR <- 
+    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+  subCreGR <- 
+    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
                                              DegP=subDegGR$pVal,

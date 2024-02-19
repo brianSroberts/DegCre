@@ -1,10 +1,11 @@
 test_that("getExpectAssocPerDEG", {
-  library(GenomicRanges)
   # bring in test degCre inputs
   data("DexNR3C1")
   
-  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  subDegGR <- 
+    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+  subCreGR <- 
+    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
   
   degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
                                              DegP=subDegGR$pVal,
@@ -33,12 +34,12 @@ test_that("getExpectAssocPerDEG", {
 
 test_that("plotExpectedAssocsPerDeg", {
   # bring in test degCre inputs
-  library(GenomicRanges)
-  # bring in test degCre inputs
   data("DexNR3C1")
   
-  subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-  subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+  subDegGR <- 
+    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+  subCreGR <- 
+    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
   
   degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
                                              DegP=subDegGR$pVal,

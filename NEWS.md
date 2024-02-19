@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.9
+## BUG FIXES
+
+* Fixed test functions to subset GRanges.
+
 # CHANGES IN VERSION 0.99.8
 ## BUG FIXES
 
