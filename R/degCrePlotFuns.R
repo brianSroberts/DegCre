@@ -17,11 +17,16 @@
 #' @return Invisibly, the picked optimal bin size.
 #'
 #' @examples
+#' #Load required packages.
+#' library(GenomicRanges)
+#' 
 #' #Load example data.
 #' data(DexNR3C1)
 #'
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -121,11 +126,16 @@ plotDegCreBinHeuristic <- function(degCreResList) {
 #' }
 #'
 #' @examples
+#' #Load required packages.
+#' library(GenomicRanges)
+#' 
 #' #Load example data.
 #' data(DexNR3C1)
 #'
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -321,11 +331,16 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 #' }
 #'
 #' @examples
-#' #' #Load example data.
+#' #Load required packages.
+#' library(GenomicRanges)
+#' 
+#' #Load example data.
 #' data(DexNR3C1)
 #'
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,

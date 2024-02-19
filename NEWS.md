@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.8
+## BUG FIXES
+
+* Fixed runnable examples to load GenomicRanges.
+
 # CHANGES IN VERSION 0.99.7
 ## BUG FIXES
 

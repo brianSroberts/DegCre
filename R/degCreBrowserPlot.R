@@ -91,12 +91,16 @@
 #'   associations in the plotted region.}
 #' }
 #' @examples
+#' #Load required packages.
 #' library(GenomicRanges)
+#' 
 #' #Load example data.
 #' data(DexNR3C1)
 #' 
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -221,9 +225,9 @@ plotBrowserDegCre <- function(degCreResList,
   #pad plotRegionGR by browserWinPad
   plotRegionGR <- plotRegionGR + browserWinPad
 
-  plotChrX <- as.character(seqnames(plotRegionGR))[1]
-  plotStartX <- start(plotRegionGR)[1]
-  plotEndX <- end(plotRegionGR)[1]
+  plotChrX <- as.character(GenomicRanges::seqnames(plotRegionGR))[1]
+  plotStartX <- GenomicRanges::start(plotRegionGR)[1]
+  plotEndX <- GenomicRanges::end(plotRegionGR)[1]
 
   plotUnitX <- round((plotEndX - plotStartX)/creSignalBinRes,0)
 

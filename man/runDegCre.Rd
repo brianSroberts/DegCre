@@ -153,11 +153,16 @@ returned in list containing a /link[S4Vectors]{Hits} object and both
 input GRanges.
 }
 \examples{
+#Load required packages.
+library(GenomicRanges)
+
 #Load sample data.
 data(DexNR3C1)
 
-subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+subDegGR <-
+ DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+subCreGR <-
+ DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 
 #With defaults.
 degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,

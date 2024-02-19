@@ -33,11 +33,16 @@
 #' }
 #'
 #' @examples
+#' #Load required packages.
+#' library(GenomicRanges)
+#' 
 #' #Load example data.
 #' data(DexNR3C1)
 #'
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -184,11 +189,16 @@ getExpectAssocPerDEG <- function(degCreResList,
 #' @return Invisibly, the median expected associations per DEG.
 #'
 #' @examples
+#' #Load required packages.
+#' library(GenomicRanges)
+#' 
 #' #Load example data.
 #' data(DexNR3C1)
 #'
-#' subDegGR <- DexNR3C1$DegGR[which(seqnames(DexNR3C1$DegGR)=="chr1")]
-#' subCreGR <- DexNR3C1$CreGR[which(seqnames(DexNR3C1$CreGR)=="chr1")]
+#' subDegGR <-
+#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#' subCreGR <-
+#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
