@@ -27,11 +27,11 @@ from \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESe
 The coordinates reference signal regions. It has the following mcols:
 \describe{
 \item{logFC}{Log-2 fold-changes from
-\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+\href{https://bioconductor.org/packages/release/bioc/html/csaw.html}{csaw}}
 \item{pVal}{P-values from
-\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+\href{https://bioconductor.org/packages/release/bioc/html/csaw.html}{csaw}}
 \item{pAdj}{Adjusted p-values from
-\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}}
+\href{https://bioconductor.org/packages/release/bioc/html/csaw.html}{csaw}}
 }
 }
 }

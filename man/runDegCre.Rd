@@ -124,7 +124,7 @@ For RNA-seq analysis, we suggest methods such as
 \href{https://bioconductor.org/packages/release/bioc/html/DESeq2.html}{DESeq2}
 or \href{https://bioconductor.org/packages/release/bioc/html/edgeR.html}{edgeR}.
 For the analysis of differential regulatory data we recommend
-\href{\url{https://bioconductor.org/packages/release/bioc/html/csaw.html}}{csaw}.
+\href{https://bioconductor.org/packages/release/bioc/html/csaw.html}{csaw}.
 As an example experiment, we use data from McDowell et al. (PMID = 30097539)
 in which A549 cells were treated with dexamethasone and control.
 RNA-seq and ChIP-seq data were collected at various time points.

@@ -40,7 +40,7 @@
 #' @param signalColor Character color for the CRE differential signal plot.
 #' (Default: \code{#DDCC77})
 #' @param geneLabelFontsize Numeric of font size (as implemented in
-#' \href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener})
+#' \href{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}{plotgardener})
 #' for gene labels. (Default: \code{8})
 #' @param axisFontSize Numeric of font size for axis labels and tick marks.
 #' (Default: \code{6})

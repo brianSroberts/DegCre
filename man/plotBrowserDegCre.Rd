@@ -85,7 +85,7 @@ probabilities in arches plot. (Default: \code{#CC6677})}
 (Default: \code{#DDCC77})}
 
 \item{geneLabelFontsize}{Numeric of font size (as implemented in
-\href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener})
+\href{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}{plotgardener})
 for gene labels. (Default: \code{8})}
 
 \item{axisFontSize}{Numeric of font size for axis labels and tick marks.
