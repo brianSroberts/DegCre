@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.10
+## BUG FIXES
+
+* Fixed example for runDegCre.
+
 # CHANGES IN VERSION 0.99.9
 ## BUG FIXES
 

@@ -174,7 +174,7 @@ degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
 
 #With custom settings.
 modDegCreResList <- runDegCre(DegGR=subDegGR,
-                           DegP=subDegGR$DegGR$pVal,
+                           DegP=subDegGR$pVal,
                            CreGR=subCreGR,
                            CreP=subCreGR$pVal,
                            reqEffectDirConcord=FALSE,
