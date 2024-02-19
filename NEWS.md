@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.12
+## BUG FIXES
+
+* Fixed one more bad href in help files.
+
 # CHANGES IN VERSION 0.99.11
 ## BUG FIXES
 

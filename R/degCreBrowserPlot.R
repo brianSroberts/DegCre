@@ -66,7 +66,7 @@
 #'
 #' @details
 #' This function uses
-#' \href{\url{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}}{plotgardener}
+#' \href{https://bioconductor.org/packages/release/bioc/html/plotgardener.html}{plotgardener}
 #' functionality to generate browser plots for visualizing DegCre analysis
 #' results in specified regions. The user can input genomic regions or gene
 #' names.
