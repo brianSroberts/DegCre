@@ -38,7 +38,7 @@ test_that("plotBrowserDegCre", {
   testPlotRegionDf <- data.frame(chr="chr1",
                                  start=7302483,
                                  end=9293894)
-  testPlotRegionGR <- makeGRangesFromDataFrame(testPlotRegionDf)
+  testPlotRegionGR <- GenomicRanges::makeGRangesFromDataFrame(testPlotRegionDf)
 
   expect_true(calcBrowserOuts$plotRegionGR==testPlotRegionGR,
               "plotRegionGR should be as expected")

@@ -1,8 +1,10 @@
+# <img src="/man/figures/DegCreLogo.png" width="400px" style="background-color:white;border=transparent" 
+
 # DegCre: Probabilistic association of DEGs to CREs from differential data
 
 ## Installation
 
-DegCre can be installed from Bioconductor version 3.18 (R version 4.2) as follows:
+DegCre can be installed from Bioconductor version 3.18 (R version 4.3.3) as follows:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE))

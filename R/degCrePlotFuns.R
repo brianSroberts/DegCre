@@ -24,9 +24,9 @@
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -54,14 +54,14 @@ plotDegCreBinHeuristic <- function(degCreResList) {
        ylab = "Median bin KS stat",
        type = 'b',
        pch = 16,
-       log = 'x',
-       cex = 0.8)
+       cex= 1.2,
+       log = 'x')
 
   points(x = binSizeKSstatMat[maskPicked, 1],
          y = binSizeKSstatMat[maskPicked, 2],
          pch = 16,
-         col = "red",
-         cex = 0.8)
+         cex = 1.2,
+         col = "red")
 
   yRange <- max(binSizeKSstatMat[, 2]) - min(binSizeKSstatMat[, 2])
   yText <- min(binSizeKSstatMat[, 2]) + 0.85 * yRange
@@ -72,7 +72,7 @@ plotDegCreBinHeuristic <- function(degCreResList) {
   par(xpd = NA)
   text(x = xText, y = yText,
     label = paste("optimal bin size", pickedBinSize, sep = "\n"),
-    col = "red",cex=0.6)
+    col = "red",cex=par("cex.axis"))
   invisible(binSizeKSstatMat[maskPicked,1])
 }
 
@@ -95,10 +95,6 @@ plotDegCreBinHeuristic <- function(degCreResList) {
 #' (Default: \code{#88CCEE})
 #' @param nullLineColor Color for the null association probability line.
 #' (Default: \code{#CC6677})
-#' @param plotLabCex Numeric value specifying the character expansion factor
-#' for labels. (Default: 0.8)
-#' @param plotAxisCex Numeric value specifying the character expansion factor
-#' for axis labels. (Default: 0.5)
 #'
 #' @details
 #' This function takes the results of the DegCre analysis, including genomic
@@ -133,9 +129,9 @@ plotDegCreBinHeuristic <- function(degCreResList) {
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -159,18 +155,16 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
                                      hiYLim = NULL,
                                      loYLim = NULL,
                                      qRangeFillColor = "#88CCEE",
-                                     nullLineColor = "#CC6677",
-                                     plotLabCex = 0.6,
-                                     plotAxisCex = 0.5) {
+                                     nullLineColor = "#CC6677") {
 
     hitsDegCre <- degCreResList$degCreHits
-    dists <- mcols(hitsDegCre)$assocDist
+    dists <- S4Vectors::mcols(hitsDegCre)$assocDist
 
     dists <- dists/1000
 
-    assocProbs <- mcols(hitsDegCre)$assocProb
-    assocProbFDRs <- mcols(hitsDegCre)$assocProbFDR
-    maxBinDists <- mcols(hitsDegCre)$binAssocDist
+    assocProbs <- S4Vectors::mcols(hitsDegCre)$assocProb
+    assocProbFDRs <- S4Vectors::mcols(hitsDegCre)$assocProbFDR
+    maxBinDists <- S4Vectors::mcols(hitsDegCre)$binAssocDist
 
     maxBinDists <- maxBinDists/1000
 
@@ -212,29 +206,25 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 
     par(xpd=NA)
 
-    plot(x=binMids,y=numPassPerBin,type="l",lwd=1,col="black",
-        ylab=nPassYlab,xlab="",xaxt='n',cex.lab=plotLabCex,
-        ylim=c(0,1.02*max(numPassPerBin)),xlim=xLimits,cex.axis=plotAxisCex)
+    plot(x=binMids,y=numPassPerBin,type="l",col="black",
+        ylab=nPassYlab,xlab="",xaxt='n',
+        ylim=c(0,1.02*max(numPassPerBin)),xlim=xLimits)
 
     #get median and quantile range  for all pass data and plot polygons
-
-    quantsMat <- matrix(ncol=4)
-
-    for(i in seq_along(uniqMaxBinDists)){
-        binDistX <- uniqMaxBinDists[i]
-        maskDistBinX <- which(maxBinDists==binDistX)
-
-        maskPassDistBinX <- intersect(maskDistBinX,maskPassFDR)
-
-        outQsX <- quantile(assocProbs[maskPassDistBinX],
-            probs=c(plotQRange[1],0.5,plotQRange[2]))
-
-        outRowX <- c(binDistX,outQsX)
-
-        quantsMat <- rbind(quantsMat,outRowX)
-    }
-
-    quantsMat <- quantsMat[2:nrow(quantsMat),]
+    
+    listQuants <- lapply(uniqMaxBinDists,function(binDistX){
+      maskDistBinX <- which(maxBinDists==binDistX)
+      
+      maskPassDistBinX <- intersect(maskDistBinX,maskPassFDR)
+      
+      outQsX <- quantile(assocProbs[maskPassDistBinX],
+                         probs=c(plotQRange[1],0.5,plotQRange[2]))
+      
+      outRowX <- c(binDistX,outQsX)
+      return(outRowX)
+    })
+    
+    quantsMat <- matrix(unlist(listQuants),ncol=4,byrow=TRUE)
 
     lowerQName <- paste("q",plotQRange[1]*100,sep="_")
     upperQName <- paste("q",plotQRange[2]*100,sep="_")
@@ -272,8 +262,6 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
     xlabel <- "Bin Upper Dist. (Kb)"
 
     par(xpd=FALSE)
-    par(cex.axis=plotAxisCex)
-    par(cex.lab=plotLabCex)
 
     #initialize plot area
     plot(x=quantsMat[,1],y=quantsMat[,4],type='n',ylim=yLimits,
@@ -284,7 +272,7 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
      tempMgp[1] <- 0.5*tempMgp[1]
      par(mgp=tempMgp)
 
-     axis(side=1,cex.axis=plotAxisCex,cex.lab=plotLabCex)
+     axis(side=1)
 
     #make polygon of quantile range
     polyXs <- c(quantsMat[,1],quantsMat[(nrow(quantsMat):1),1])
@@ -300,7 +288,7 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 
     #plot null association prob
     lines(x=nullAssocMat[,1],y=nullAssocMat[,2],
-        lwd=1.2,col=nullLineColor)
+        col=nullLineColor)
 
     outMat <- cbind(quantsMat,nullAssocMat[,2])
     colnames(outMat)[5] <- "nullAssocProb"
@@ -338,9 +326,9 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -359,12 +347,12 @@ plotDegCreAssocProbVsDist <- function(degCreResList,
 getDistBinNullAssocProb <- function(degCreResList) {
     hitsDegCre <- degCreResList$degCreHits
 
-    binAssocDists <- mcols(hitsDegCre)$binAssocDist
+    binAssocDists <- S4Vectors::mcols(hitsDegCre)$binAssocDist
     uniqBinAssocDists <- sort(unique(binAssocDists))
 
     alphaDEG <- degCreResList$alphaVal
 
-    degPadjs <- mcols(hitsDegCre)$DegPadj
+    degPadjs <- S4Vectors::mcols(hitsDegCre)$DegPadj
 
     binNullAssoc <- unlist(lapply(uniqBinAssocDists,function(uniqDistBinX){
         maskDistBinX <- which(binAssocDists==uniqDistBinX)

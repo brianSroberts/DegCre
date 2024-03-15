@@ -6,12 +6,18 @@
 #' @name DegCre
 #' @aliases DegCre
 #' @aliases DegCre-package
-#' @import GenomicRanges
-#' @import S4Vectors
+#' @importFrom GenomeInfoDb seqnames
+#' @importFrom BiocGenerics strand width
+#' @importFrom IRanges findOverlaps distance start end reduce tile
+#' @importFrom GenomicRanges granges GRanges GRangesList makeGRangesFromDataFrame
+#' @importClassesFrom GenomicRanges GRanges GRangesList
+#' @importFrom S4Vectors subjectHits queryHits mcols Hits
+#' @importClassesFrom S4Vectors Hits
 #' @importFrom stats median rnorm pbinom quantile p.adjust
 #' @importFrom graphics plot lines points par axis layout polygon text hist
-#' @import grDevices
-NULL
+#' @importFrom grDevices colorRampPalette dev.size
+#' @importFrom plotgardener colorby plotPairsArches annoHeatmapLegend plotSignal annoYaxis plotGenomeLabel plotGenes plotText pageCreate
+"_PACKAGE"
 
 #' DegCre input data for examples.
 #'
@@ -182,9 +188,9 @@ NULL
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #With defaults.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -281,8 +287,8 @@ runDegCre <- function(DegGR,
         DegLfc <- DegLfc[maskNoNaPromBoth]
         CreLfc <- CreLfc[maskNoNaCreP]
 
-        promHitSpaceLfcs <- DegLfc[queryHits(degCreHits)]
-        creHitSpaceLfcs <- CreLfc[subjectHits(degCreHits)]
+        promHitSpaceLfcs <- DegLfc[S4Vectors::queryHits(degCreHits)]
+        creHitSpaceLfcs <- CreLfc[S4Vectors::subjectHits(degCreHits)]
         maskConcordantHits <- which(sign(promHitSpaceLfcs)==
             sign(creHitSpaceLfcs))
         degCreHits <- degCreHits[maskConcordantHits]
@@ -320,7 +326,8 @@ runDegCre <- function(DegGR,
     #makes Hits mad. Convert to a dataframe for a while
     promCreHitsDf <- as.data.frame(degCreHits)
 
-    sortPromCreHitsDf <- promCreHitsDf[order(promCreHitsDf$assocDist),]
+    sortPromCreHitsDf <- 
+      promCreHitsDf[order(promCreHitsDf$assocDist),,drop=FALSE]
 
     numHits <- nrow(sortPromCreHitsDf)
 
@@ -452,15 +459,18 @@ runDegCre <- function(DegGR,
 
 
     #add Ps  of associations; reorder too
-    allDistBinsStatsMat <- cbind(allDistBinsStatsMat[,1],
-        allAssocProbFDR,allDistBinsStatsMat[,2:ncol(allDistBinsStatsMat)])
+    allDistBinsStatsMat <- cbind(allDistBinsStatsMat[,1,drop=FALSE],
+        allAssocProbFDR,
+        allDistBinsStatsMat[,2:ncol(allDistBinsStatsMat),drop=FALSE])
 
     colnames(allDistBinsStatsMat)[1] <- "assocProb"
     colnames(allDistBinsStatsMat)[2] <- "assocProbFDR"
 
     #put together allDistBinsStatsMat and sortPromCreHitsDf
-    sortPromCreHitsStatsDf <- data.frame(sortPromCreHitsDf[,seq_len(3)],
-        allDistBinsStatsMat,sortPromCreHitsDf[,4])
+    sortPromCreHitsStatsDf <- data.frame(sortPromCreHitsDf[,seq_len(3),
+                                                           drop=FALSE],
+        allDistBinsStatsMat,sortPromCreHitsDf[,4,drop=FALSE])
+    
     colnames(sortPromCreHitsStatsDf)[ncol(sortPromCreHitsStatsDf)] <-
         "distBinId"
 
@@ -477,17 +487,18 @@ runDegCre <- function(DegGR,
     sortPromCreHitsStatsDf[,2] <- origCreGRIndices
 
     #convert sortPromCreHitsStatsDf back into a Hits object
-    sortPromCreHitsStats <- Hits(from=sortPromCreHitsStatsDf[,1],
+    sortPromCreHitsStats <- S4Vectors::Hits(from=sortPromCreHitsStatsDf[,1],
         to=sortPromCreHitsStatsDf[,2],
         nLnode=length(origDegGR),
         nRnode=length(origCreGR),
         sort.by.query=TRUE)
 
 
-    mcolsHitsDf <- sortPromCreHitsStatsDf[,3:ncol(sortPromCreHitsStatsDf)]
+    mcolsHitsDf <- 
+      sortPromCreHitsStatsDf[,3:ncol(sortPromCreHitsStatsDf),drop=FALSE]
 
     #add metadata columns to sortPromCreHitsStatsDf
-    mcols(sortPromCreHitsStats) <- mcolsHitsDf
+    S4Vectors::mcols(sortPromCreHitsStats) <- mcolsHitsDf
 
     #form output list
     outList <- list()
@@ -577,9 +588,9 @@ runDegCre <- function(DegGR,
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' # Run DegCre over range of alpha values:
 #' alphaOptList <- optimizeAlphaDegCre(DegGR = subDegGR,
@@ -739,9 +750,9 @@ optimizeAlphaDegCre <- function(DegGR,
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -770,10 +781,10 @@ degCrePRAUC <- function(degCreResList,
                         nThresh=200){
 
        hitsDegCre <- degCreResList$degCreHits
-    assocProb <- mcols(hitsDegCre)$assocProb
+    assocProb <- S4Vectors::mcols(hitsDegCre)$assocProb
 
     expectedDEGPos <- rep(0,length(hitsDegCre))
-    expectedDEGPos[which(mcols(hitsDegCre)$DegPadj<=alphaVal)] <- (1-alphaVal)
+    expectedDEGPos[which(S4Vectors::mcols(hitsDegCre)$DegPadj<=alphaVal)] <- (1-alphaVal)
     totExpectDEGPos <- sum(expectedDEGPos)
 
     #vary the non-zero assocProb
@@ -865,7 +876,7 @@ degCrePRAUC <- function(degCreResList,
     if(makePlot){
         plot(x=allXs,y=allYs,type='n',xlab="TPR",ylab="apparent PPV")
         lines(x=actualTPrPPVMAt[,1],y=actualTPrPPVMAt[,2],
-            type='l',lwd=1.5,col='black')
+            type='l',col='black')
 
         seethruRed <- changeColorAlpha("red",newAlpha=100)
         polygon(x=c(shuffTPrQs[,1],rev(shuffTPrQs[,1])),
@@ -948,11 +959,11 @@ distBinHeuristic <- function(degCreHits,
                               smallestTestBinSize = 100,
                               verbose = TRUE) {
 
-       sortPromCreQueryHits <-
-        queryHits(degCreHits)[order(mcols(degCreHits)$assocDist)]
+    sortPromCreQueryHits <-
+        S4Vectors::queryHits(degCreHits)[order(S4Vectors::mcols(degCreHits)$assocDist)]
 
     sortPromCreSubjHits <-
-        subjectHits(degCreHits)[order(mcols(degCreHits)$assocDist)]
+        S4Vectors::subjectHits(degCreHits)[order(S4Vectors::mcols(degCreHits)$assocDist)]
 
     numAssocs <- length(sortPromCreSubjHits)
 
@@ -1177,17 +1188,17 @@ fastKS <- function(testSet, testIndices, refCumProbs) {
 #'
 #' @export
 getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
-  hitsPromsToCRE <- GenomicRanges::findOverlaps(DegGR, CreGR, maxgap = maxDist,
+  hitsPromsToCRE <- IRanges::findOverlaps(DegGR, CreGR, maxgap = maxDist,
                                                 ignore.strand = TRUE)
 
   # Get the association distances
   assocDist <-
-    GenomicRanges::distance(DegGR[queryHits(hitsPromsToCRE)],
-    CreGR[subjectHits(hitsPromsToCRE)])
+    IRanges::distance(DegGR[S4Vectors::queryHits(hitsPromsToCRE)],
+    CreGR[S4Vectors::subjectHits(hitsPromsToCRE)])
 
   distDf <- data.frame(assocDist = assocDist)
 
-  mcols(hitsPromsToCRE) <- distDf
+  S4Vectors::mcols(hitsPromsToCRE) <- distDf
   return(hitsPromsToCRE)
 }
 
@@ -1239,7 +1250,7 @@ calcDependIndependEnrichStats <- function(hitsWithDistDf, subHitsIndex,
                                           independP,
                                           alpha) {
 
-  totalObs <- nrow(hitsWithDistDf[subHitsIndex,])
+  totalObs <- nrow(hitsWithDistDf[subHitsIndex,,drop=FALSE])
 
   subjHitsTemp <- hitsWithDistDf[subHitsIndex,2]
   queryHitsTemp <- hitsWithDistDf[subHitsIndex,1]

@@ -40,9 +40,9 @@
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -73,12 +73,12 @@ getExpectAssocPerDEG <- function(degCreResList,
     alphaDeg <- degCreResList$alphaVal
 
     #get query level expected assocs
-    maskPassAssocFDR <- which(mcols(degCreHits)$assocProbFDR <= assocAlpha)
+    maskPassAssocFDR <- which(S4Vectors::mcols(degCreHits)$assocProbFDR <= assocAlpha)
 
     passDegCreHits <- degCreHits[maskPassAssocFDR]
 
     #now convert to gene level
-    allColNameDegGr <- colnames(mcols(DegGR))
+    allColNameDegGr <- colnames(S4Vectors::mcols(DegGR))
 
     if(is.null(geneNameColName)){
         maskGeneColName <- grep("gene",allColNameDegGr,ignore.case=TRUE)
@@ -92,18 +92,19 @@ getExpectAssocPerDEG <- function(degCreResList,
         maskGeneColName <- which(allColNameDegGr == geneNameColName)
     }
 
-    allGeneNames <- mcols(DegGR)[,maskGeneColName]
+    allGeneNames <- S4Vectors::mcols(DegGR)[,maskGeneColName]
 
-    allPassAssocProbs <- mcols(passDegCreHits)$assocProb
+    allPassAssocProbs <- S4Vectors::mcols(passDegCreHits)$assocProb
 
     expectAssocPerGene <-
         tapply(allPassAssocProbs,
-        INDEX=allGeneNames[queryHits(passDegCreHits)],
+        INDEX=allGeneNames[S4Vectors::queryHits(passDegCreHits)],
         FUN=function(expectX){
             return(sum(expectX))
         })
 
-    nAssocPerGeneRle <- rle(sort(allGeneNames[queryHits(passDegCreHits)]))
+    nAssocPerGeneRle <- 
+      rle(sort(allGeneNames[S4Vectors::queryHits(passDegCreHits)]))
 
     rawNAssocPerGene <- nAssocPerGeneRle$lengths
 
@@ -113,7 +114,7 @@ getExpectAssocPerDEG <- function(degCreResList,
     nAssocPerGene <- rawNAssocPerGene[maskToUniqAllGenes]
 
 
-    allDegGRMcolsDf <- mcols(DegGR)
+    allDegGRMcolsDf <- S4Vectors::mcols(DegGR)
 
     uniqAllGenes <- unique(allGeneNames)
 
@@ -122,7 +123,7 @@ getExpectAssocPerDEG <- function(degCreResList,
         return(maskGeneX[1])
     }))
 
-    uniqGeneDegMcolsDf <- allDegGRMcolsDf[uniqGeneIndices,]
+    uniqGeneDegMcolsDf <- allDegGRMcolsDf[uniqGeneIndices,,drop=FALSE]
 
     expectAssocsList <- lapply(uniqGeneDegMcolsDf[,maskGeneColName],
         function(geneNameX){
@@ -196,9 +197,9 @@ getExpectAssocPerDEG <- function(degCreResList,
 #' data(DexNR3C1)
 #'
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -234,7 +235,7 @@ plotExpectedAssocsPerDeg <- function(expectAssocPerDegDf,
     rawExpectAssocs <- expectAssocPerDegDf$expectAssocs
 
     expectAssocPerDegDf <-
-        expectAssocPerDegDf[which(!is.na(rawExpectAssocs)),]
+        expectAssocPerDegDf[which(!is.na(rawExpectAssocs)),,drop=FALSE]
 
     expectAssocs <- expectAssocPerDegDf$expectAssocs
 

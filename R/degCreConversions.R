@@ -24,9 +24,9 @@
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -46,9 +46,9 @@ calcRawAssocProbOR <- function(degCreResList){
 
     hitsX <- degCreResList$degCreHits
     alphaValX <- degCreResList$alphaVal
-    degPadjX <- mcols(hitsX)$DegPadj
-    binIdsX <- mcols(hitsX)$distBinId
-    rawAssocProbsX <- mcols(hitsX)$rawAssocProb
+    degPadjX <- S4Vectors::mcols(hitsX)$DegPadj
+    binIdsX <- S4Vectors::mcols(hitsX)$distBinId
+    rawAssocProbsX <- S4Vectors::mcols(hitsX)$rawAssocProb
 
     nullExpectedProbByBin <- tapply(degPadjX,binIdsX,function(degPadjY){
         expectTot <- (1-alphaValX)*length(which(degPadjY<=alphaValX))
@@ -118,9 +118,9 @@ calcRawAssocProbOR <- function(degCreResList){
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -146,7 +146,7 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 
     degCreHits <- degCreResList$degCreHits
 
-    maskPassAlpha <- which(mcols(degCreHits)$assocProbFDR<=
+    maskPassAlpha <- which(S4Vectors::mcols(degCreHits)$assocProbFDR<=
         assocAlpha)
 
     if(length(maskPassAlpha)<1){
@@ -157,19 +157,21 @@ convertdegCreResListToGInteraction <- function(degCreResList,
         keepDegCreHits <- degCreHits[maskPassAlpha]
 
         outGInter <-
-         InteractionSet::GInteractions(granges(DegGRX[queryHits(keepDegCreHits)]),
-                                       granges(CreGRX[subjectHits(keepDegCreHits)]))
+         InteractionSet::GInteractions(granges(DegGRX[S4Vectors::queryHits(keepDegCreHits)]),
+                                       granges(CreGRX[S4Vectors::subjectHits(keepDegCreHits)]))
 
-        mcolsHitsDf <- data.frame(mcols(keepDegCreHits))
+        mcolsHitsDf <- data.frame(S4Vectors::mcols(keepDegCreHits))
 
-        mcolsDegDf <- data.frame(mcols(DegGRX[queryHits(keepDegCreHits)]))
+        mcolsDegDf <- 
+          data.frame(S4Vectors::mcols(DegGRX[S4Vectors::queryHits(keepDegCreHits)]))
         colnames(mcolsDegDf) <- paste("Deg",colnames(mcolsDegDf),sep="_")
 
-        mcolsCreDf <- data.frame(mcols(CreGRX[subjectHits(keepDegCreHits)]))
+        mcolsCreDf <- 
+          data.frame(S4Vectors::mcols(CreGRX[S4Vectors::subjectHits(keepDegCreHits)]))
         colnames(mcolsCreDf) <- paste("Cre",colnames(mcolsCreDf),sep="_")
 
         mcolsAllDf <- data.frame(mcolsHitsDf,mcolsDegDf,mcolsCreDf)
-        mcols(outGInter) <- mcolsAllDf
+        S4Vectors::mcols(outGInter) <- mcolsAllDf
     }
     return(outGInter)
 }
@@ -213,9 +215,9 @@ convertdegCreResListToGInteraction <- function(degCreResList,
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -248,7 +250,7 @@ convertDegCreDataFrame <- function(degCreResList,
 
     degCreHits <- degCreResList$degCreHits
 
-    maskPassAlpha <- which(mcols(degCreHits)$assocProbFDR<=
+    maskPassAlpha <- which(S4Vectors::mcols(degCreHits)$assocProbFDR<=
         assocAlpha)
 
     if(length(maskPassAlpha)<1){
@@ -258,7 +260,7 @@ convertDegCreDataFrame <- function(degCreResList,
     else{
         keepDegCreHits <- degCreHits[maskPassAlpha]
 
-        keepDegGRx <- DegGRX[queryHits(keepDegCreHits)]
+        keepDegGRx <- DegGRX[S4Vectors::queryHits(keepDegCreHits)]
         keepDegDfx <- as.data.frame(keepDegGRx)
         #get rid of "width" column
         keepDegDfx <- keepDegDfx[,c(seq_len(3),
@@ -266,7 +268,7 @@ convertDegCreDataFrame <- function(degCreResList,
         colnames(keepDegDfx)[1] <- "chr"
         colnames(keepDegDfx) <- paste("Deg",colnames(keepDegDfx),sep="_")
 
-        keepCreGRx <- CreGRX[subjectHits(keepDegCreHits)]
+        keepCreGRx <- CreGRX[S4Vectors::subjectHits(keepDegCreHits)]
         keepCreDfx <- as.data.frame(keepCreGRx)
         #get rid of "width" column
         keepCreDfx <- keepCreDfx[,c(seq_len(3),
@@ -274,16 +276,17 @@ convertDegCreDataFrame <- function(degCreResList,
         colnames(keepCreDfx)[1] <- "chr"
         colnames(keepCreDfx) <- paste("Cre",colnames(keepCreDfx),sep="_")
 
-        hitsMcolsDf <- as.data.frame(mcols(keepDegCreHits))
+        hitsMcolsDf <- as.data.frame(S4Vectors::mcols(keepDegCreHits))
 
         #keep only those that ar not redundant with those in Deg or Cre Dfs
-        keepHitsMcolsDf <- hitsMcolsDf[,c(seq_len(4),seq(from=8,to=10))]
+        keepHitsMcolsDf <- 
+          hitsMcolsDf[,c(seq_len(4),seq(from=8,to=10)),drop=FALSE]
 
-        outDf <- data.frame(keepDegDfx[,seq_len(4)],
-            keepCreDfx[,seq_len(4)],
+        outDf <- data.frame(keepDegDfx[,seq_len(4),drop=FALSE],
+            keepCreDfx[,seq_len(4),drop=FALSE],
             keepHitsMcolsDf,
-            keepDegDfx[,seq(from=5,to=ncol(keepDegDfx))],
-            keepCreDfx[,seq(from=5,to=ncol(keepCreDfx))])
+            keepDegDfx[,seq(from=5,to=ncol(keepDegDfx)),drop=FALSE],
+            keepCreDfx[,seq(from=5,to=ncol(keepCreDfx)),drop=FALSE])
     }
 
     return(outDf)

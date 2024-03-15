@@ -1,3 +1,13 @@
+# CHANGES IN VERSION 0.99.13
+
+* Numerous code style changes made to comply with Bioconductor standards.
+
+* Updated to run require R 4.3.3
+
+* Vignette style changed to Bioconductor
+
+* Selective imports implemented
+
 # CHANGES IN VERSION 0.99.12
 ## BUG FIXES
 

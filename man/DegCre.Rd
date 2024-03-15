@@ -8,3 +8,15 @@
 \description{
 Probabilistic association of DEGs to CREs from differential data.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/brianSroberts/DegCre}
+  \item Report bugs at \url{https://github.com/brianSroberts/DegCre/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Brian S. Roberts \email{brianroberts1976@yahoo.com} (\href{https://orcid.org/0009-0001-2914-6826}{ORCID})
+
+}

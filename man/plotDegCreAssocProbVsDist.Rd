@@ -11,9 +11,7 @@ plotDegCreAssocProbVsDist(
   hiYLim = NULL,
   loYLim = NULL,
   qRangeFillColor = "#88CCEE",
-  nullLineColor = "#CC6677",
-  plotLabCex = 0.6,
-  plotAxisCex = 0.5
+  nullLineColor = "#CC6677"
 )
 }
 \arguments{
@@ -37,12 +35,6 @@ threshold for association probability. (Default: \code{0.05})}
 
 \item{nullLineColor}{Color for the null association probability line.
 (Default: \code{#CC6677})}
-
-\item{plotLabCex}{Numeric value specifying the character expansion factor
-for labels. (Default: 0.8)}
-
-\item{plotAxisCex}{Numeric value specifying the character expansion factor
-for axis labels. (Default: 0.5)}
 }
 \value{
 Invisibly, a matrix with these columns:
@@ -82,9 +74,9 @@ library(GenomicRanges)
 data(DexNR3C1)
 
 subDegGR <-
- DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+ DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 subCreGR <-
- DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+ DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 
 #Generate DegCre results.
 degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,

@@ -98,9 +98,9 @@
 #' data(DexNR3C1)
 #' 
 #' subDegGR <-
-#'  DexNR3C1$DegGR[which(GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1")]
+#'  DexNR3C1$DegGR[which(GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1")]
 #' subCreGR <-
-#'  DexNR3C1$CreGR[which(GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1")]
+#'  DexNR3C1$CreGR[which(GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1")]
 #'
 #' #Generate DegCre results.
 #' degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
@@ -137,8 +137,8 @@ plotBrowserDegCre <- function(degCreResList,
                               plotRegionGR = NULL,
                               CreSignalName = "CRE",
                               assembly = "hg38",
-                              plotWidth = dev.size("in")[1],
-                              plotHeight = dev.size("in")[2],
+                              plotWidth = grDevices::dev.size("in")[1],
+                              plotHeight = grDevices::dev.size("in")[2],
                               plotXbegin = 0.9,
                               mergeGenePromotersDist = 1000,
                               sigPlotMaxY = 4,
@@ -162,14 +162,14 @@ plotBrowserDegCre <- function(degCreResList,
 
   promCreHitsX <- degCreResList$degCreHits
 
-  keepPromCreHitsX <- promCreHitsX[which(mcols(promCreHitsX)$assocProbFDR<=
-    assocAlpha)]
+  keepPromCreHitsX <- 
+    promCreHitsX[which(S4Vectors::mcols(promCreHitsX)$assocProbFDR<=assocAlpha)]
 
   DegGRX <- degCreResList$DegGR
-  degGrMcolsDf <- as.data.frame(mcols(DegGRX))
+  degGrMcolsDf <- as.data.frame(S4Vectors::mcols(DegGRX))
 
   CreGRX <- degCreResList$CreGR
-  creGrMcolsDf <- as.data.frame(mcols(CreGRX))
+  creGrMcolsDf <- as.data.frame(S4Vectors::mcols(CreGRX))
 
   if(is.null(geneNameColName)){
     #try to find geneName in the mcols of DegGR to find the right
@@ -225,9 +225,9 @@ plotBrowserDegCre <- function(degCreResList,
   #pad plotRegionGR by browserWinPad
   plotRegionGR <- plotRegionGR + browserWinPad
 
-  plotChrX <- as.character(GenomicRanges::seqnames(plotRegionGR))[1]
-  plotStartX <- GenomicRanges::start(plotRegionGR)[1]
-  plotEndX <- GenomicRanges::end(plotRegionGR)[1]
+  plotChrX <- as.character(GenomeInfoDb::seqnames(plotRegionGR))[1]
+  plotStartX <- IRanges::start(plotRegionGR)[1]
+  plotEndX <- IRanges::end(plotRegionGR)[1]
 
   plotUnitX <- round((plotEndX - plotStartX)/creSignalBinRes,0)
 
@@ -244,9 +244,11 @@ plotBrowserDegCre <- function(degCreResList,
   #find what associations within plotRegionGR
   #associations must be in keepPromCreHitsX (pass assocAlpha)
 
-  degIndicesInRegion <- queryHits(findOverlaps(DegGRX,plotRegionGR))
+  degIndicesInRegion <- 
+    S4Vectors::queryHits(IRanges::findOverlaps(DegGRX,plotRegionGR))
 
-  keepDegMask <- which(queryHits(keepPromCreHitsX) %in% degIndicesInRegion)
+  keepDegMask <- 
+    which(S4Vectors::queryHits(keepPromCreHitsX) %in% degIndicesInRegion)
 
   if(length(keepDegMask)==0){
     warning("No associations passing assocAlpha found for specified region.")
@@ -262,7 +264,7 @@ plotBrowserDegCre <- function(degCreResList,
     mergeGenePromotersDist=mergeGenePromotersDist)
 
   #make browser plot
-  pageCreate(width=plotWidth,height=plotHeight, showGuides=FALSE,
+  plotgardener::pageCreate(width=plotWidth,height=plotHeight, showGuides=FALSE,
     default.units = "inches",xgrid = 0, ygrid = 0)
 
   subPlotWidth <- plotWidth - plotXbegin - 0.1
@@ -273,7 +275,8 @@ plotBrowserDegCre <- function(degCreResList,
   archesPlotH <- 0.5
   archesAlpha <- 0.8
 
-  assocColorPallette <- colorRampPalette(c(lowAssocColor, hiAssocColor))
+  assocColorPallette <- 
+    grDevices::colorRampPalette(c(lowAssocColor, hiAssocColor))
 
   if(is.null(assocColorRange)){
     assocColorRange <- c(0,max(GInterX$assocProb))
@@ -518,7 +521,7 @@ creGRToSignal <- function(
   logFcColName="logFC",
   creSignalBinRes=100){
 
-  creGrMcolsDf <- mcols(CreGR)
+  creGrMcolsDf <- S4Vectors::mcols(CreGR)
   rawCrePVals <- creGrMcolsDf[[pValColName]]
 
   #get logFCs
@@ -534,15 +537,16 @@ creGRToSignal <- function(
   noNaNegLog10PVals <- signedCreNegLog10PVals[maskNoNA]
 
   #pad Cre signal for nice plotting
-  padCreGR <- unlist(tile(plotRegionGR+10,n=creSignalBinRes))
+  padCreGR <- unlist(IRanges::tile(plotRegionGR+10,n=creSignalBinRes))
   padCreGR$score <- rnorm(n=creSignalBinRes,mean=0,sd=0.0001)
 
   noNaCreGR <- CreGR[maskNoNA]
 
-  hitsPadtoCre <- findOverlaps(padCreGR,noNaCreGR)
+  hitsPadtoCre <- IRanges::findOverlaps(padCreGR,noNaCreGR)
 
-  realCreScores <- tapply(noNaNegLog10PVals[subjectHits(hitsPadtoCre)],
-    INDEX=queryHits(hitsPadtoCre),FUN=function(x){
+  realCreScores <- 
+    tapply(noNaNegLog10PVals[S4Vectors::subjectHits(hitsPadtoCre)],
+    INDEX=S4Vectors::queryHits(hitsPadtoCre),FUN=function(x){
 
     maskHighestAbs <- which(abs(x)==max(abs(x)))
     if(length(maskHighestAbs)>1){
@@ -552,7 +556,7 @@ creGRToSignal <- function(
     return(outVal)
   })
 
-  padCreGR$score[unique(queryHits(hitsPadtoCre))] <- realCreScores
+  padCreGR$score[unique(S4Vectors::queryHits(hitsPadtoCre))] <- realCreScores
   return(padCreGR)
 }
 
@@ -621,21 +625,25 @@ makePlotGInter <- function(DegGR,
                          mergeGenePromotersDist){
 
 
-  degIndicesInRegion <- queryHits(findOverlaps(DegGR,plotRegionGR))
-  creIndicesInRegion <- queryHits(findOverlaps(CreGR,plotRegionGR))
+  degIndicesInRegion <- 
+    S4Vectors::queryHits(IRanges::findOverlaps(DegGR,plotRegionGR))
+  creIndicesInRegion <- 
+    S4Vectors::queryHits(IRanges::findOverlaps(CreGR,plotRegionGR))
 
-  keepDegMask <- which(queryHits(keepPromCreHits) %in% degIndicesInRegion)
-  keepCreMask <- which(subjectHits(keepPromCreHits) %in% creIndicesInRegion)
+  keepDegMask <- 
+    which(S4Vectors::queryHits(keepPromCreHits) %in% degIndicesInRegion)
+  keepCreMask <- 
+    which(S4Vectors::subjectHits(keepPromCreHits) %in% creIndicesInRegion)
 
   keepAllMask <- sort(unique(c(keepDegMask,keepCreMask)))
 
   inRegionPromCreHits <- keepPromCreHits[keepAllMask]
 
   #merge promoters for same gene that are within mergeGenePromotersDist
-  rawInRegionDegGR <- DegGR[queryHits(inRegionPromCreHits)]
-  strand(rawInRegionDegGR) <- rep("*",length(rawInRegionDegGR))
+  rawInRegionDegGR <- DegGR[S4Vectors::queryHits(inRegionPromCreHits)]
+  BiocGenerics::strand(rawInRegionDegGR) <- rep("*",length(rawInRegionDegGR))
 
-  rawInRegionDegMcolsDf <- as.data.frame(mcols(rawInRegionDegGR))
+  rawInRegionDegMcolsDf <- as.data.frame(S4Vectors::mcols(rawInRegionDegGR))
   inRegionGeneNames <- as.character(rawInRegionDegMcolsDf[,maskFoundGene])
   uniqInRegionGeneNames <- unique(inRegionGeneNames)
   names(uniqInRegionGeneNames) <- uniqInRegionGeneNames
@@ -650,12 +658,12 @@ makePlotGInter <- function(DegGR,
       }
       else{
         tempMergeGRx <-
-          GenomicRanges::reduce(inRegionDegGR+mergeGenePromotersDist)
+          IRanges::reduce(inRegionDegGR+mergeGenePromotersDist)
         hitsXtoTempMerge <-
-          GenomicRanges::findOverlaps(tempMergeGRx,inRegionDegGR)
-        DegGRsubjHits <- inRegionDegGR[subjectHits(hitsXtoTempMerge)]
+          IRanges::findOverlaps(tempMergeGRx,inRegionDegGR)
+        DegGRsubjHits <- inRegionDegGR[S4Vectors::subjectHits(hitsXtoTempMerge)]
         outGRx <- tapply(GenomicRanges::granges(DegGRsubjHits),
-          INDEX=queryHits(hitsXtoTempMerge),FUN=function(setGRx){
+          INDEX=S4Vectors::queryHits(hitsXtoTempMerge),FUN=function(setGRx){
             return(range(setGRx))
         })
         mergeGRx <- do.call(c,unname(outGRx))
@@ -664,8 +672,8 @@ makePlotGInter <- function(DegGR,
             " promoters have been merged for plotting.")
         }
         hitsInRegiontoMerged <-
-          GenomicRanges::findOverlaps(inRegionDegGR,mergeGRx)
-        outGRX <- mergeGRx[subjectHits(hitsInRegiontoMerged)]
+          IRanges::findOverlaps(inRegionDegGR,mergeGRx)
+        outGRX <- mergeGRx[S4Vectors::subjectHits(hitsInRegiontoMerged)]
         outGRX$origI <- maskX
       }
 
@@ -690,21 +698,21 @@ makePlotGInter <- function(DegGR,
 
 
   #make the CreGR regions a minimum width for pretty plotting
-  rawInRegionCreGR <- CreGR[subjectHits(inRegionPromCreHits)]
+  rawInRegionCreGR <- CreGR[S4Vectors::subjectHits(inRegionPromCreHits)]
 
   tempInRegionCreGR <- granges(rawInRegionCreGR)
 
-  strand(tempInRegionCreGR) <- rep("*",length(tempInRegionCreGR))
+  BiocGenerics::strand(tempInRegionCreGR) <- rep("*",length(tempInRegionCreGR))
 
   #unique regions, may have repeats
   tempInRegionCreGR <- unique(tempInRegionCreGR)
 
-  maskCreTooSmall <- which(width(tempInRegionCreGR)<plotUnit)
+  maskCreTooSmall <- which(BiocGenerics::width(tempInRegionCreGR)<plotUnit)
 
   if(length(maskCreTooSmall)>0){
     tempInRegionCreGR[maskCreTooSmall] <-
       tempInRegionCreGR[maskCreTooSmall]*
-      (width(tempInRegionCreGR[maskCreTooSmall])/plotUnit)
+      (BiocGenerics::width(tempInRegionCreGR[maskCreTooSmall])/plotUnit)
   }
 
   #expanding tempInRegionCreGR for plot readability could yield to
@@ -718,30 +726,31 @@ makePlotGInter <- function(DegGR,
 
   #deg
   hitsTempToRawInRegionDegGR <-
-    GenomicRanges::findOverlaps(tempInRegionDegGR,
+    IRanges::findOverlaps(tempInRegionDegGR,
     rawInRegionDegGR,maxgap=mergeGenePromotersDist)
 
   origRawDegIndices <-
-    queryHits(inRegionPromCreHits)[subjectHits(hitsTempToRawInRegionDegGR)]
+    S4Vectors::queryHits(inRegionPromCreHits)[S4Vectors::subjectHits(hitsTempToRawInRegionDegGR)]
 
-  maskDegTempToRaw <- match(queryHits(inRegionPromCreHits),origRawDegIndices)
+  maskDegTempToRaw <- 
+    match(S4Vectors::queryHits(inRegionPromCreHits),origRawDegIndices)
 
   newTempDegQueryHits <-
-    queryHits(hitsTempToRawInRegionDegGR)[maskDegTempToRaw]
+    S4Vectors::queryHits(hitsTempToRawInRegionDegGR)[maskDegTempToRaw]
 
   #cre
-  hitsTempToRawInRegionCreGR <- GenomicRanges::findOverlaps(tempInRegionCreGR,
+  hitsTempToRawInRegionCreGR <- IRanges::findOverlaps(tempInRegionCreGR,
     rawInRegionCreGR)
 
   origRawCreIndices <-
-    subjectHits(inRegionPromCreHits)[
-      subjectHits(hitsTempToRawInRegionCreGR)]
+    S4Vectors::subjectHits(inRegionPromCreHits)[
+      S4Vectors::subjectHits(hitsTempToRawInRegionCreGR)]
 
   maskCreTempToRaw <-
-    match(subjectHits(inRegionPromCreHits),origRawCreIndices)
+    match(S4Vectors::subjectHits(inRegionPromCreHits),origRawCreIndices)
 
   newTempCreSubjHits <-
-    queryHits(hitsTempToRawInRegionCreGR)[maskCreTempToRaw]
+    S4Vectors::queryHits(hitsTempToRawInRegionCreGR)[maskCreTempToRaw]
 
   newTempRefHitsMat <- cbind(newTempDegQueryHits,newTempCreSubjHits)
 
@@ -763,14 +772,14 @@ makePlotGInter <- function(DegGR,
     newTempRefHitsMat <- matrix(unlist(listNewTempRefHitsMat),
       byrow=TRUE,ncol=2)
 
-    newAdjAssocProb <- tapply(mcols(inRegionPromCreHits)$assocProb,
+    newAdjAssocProb <- tapply(S4Vectors::mcols(inRegionPromCreHits)$assocProb,
       INDEX=hashNewTempRefHitsMat,function(x){
         return(max(x,na.rm=TRUE))
       })
 
     newAdjAssocProb <- as.numeric(newAdjAssocProb)
 
-    newAdjAssocProbFDR <- tapply(mcols(inRegionPromCreHits)$assocProbFDR,
+    newAdjAssocProbFDR <- tapply(S4Vectors::mcols(inRegionPromCreHits)$assocProbFDR,
       INDEX=hashNewTempRefHitsMat,function(x){
         return(min(x,na.rm=TRUE))
       })
@@ -778,8 +787,8 @@ makePlotGInter <- function(DegGR,
     newAdjAssocProbFDR <- as.numeric(newAdjAssocProbFDR)
   }
   else{
-    newAdjAssocProb <- mcols(inRegionPromCreHits)$assocProb
-    newAdjAssocProbFDR <- mcols(inRegionPromCreHits)$assocProbFDR
+    newAdjAssocProb <- S4Vectors::mcols(inRegionPromCreHits)$assocProb
+    newAdjAssocProbFDR <- S4Vectors::mcols(inRegionPromCreHits)$assocProbFDR
   }
 
   subTempInRegionDegGR <-
@@ -862,30 +871,30 @@ getDegCrePlotRegionFromGene <- function(degCreResList,
   CreGRX <- degCreResList$CreGR
 
   degCreHits <- degCreResList$degCreHits
-  keepDegCreHits <- degCreHits[which(mcols(degCreHits)$assocProbFDR<=
+  keepDegCreHits <- degCreHits[which(S4Vectors::mcols(degCreHits)$assocProbFDR<=
     assocAlpha)]
 
-  degGrMcolsDf <- as.data.frame(mcols(DegGRX))
+  degGrMcolsDf <- as.data.frame(S4Vectors::mcols(DegGRX))
 
   geneNameCol <- which(colnames(degGrMcolsDf)==geneNameColName)
 
   maskGeneX <- which(degGrMcolsDf[,geneNameCol] == geneName)
-  maskGeneInHits <- which(queryHits(keepDegCreHits) %in% maskGeneX)
+  maskGeneInHits <- which(S4Vectors::queryHits(keepDegCreHits) %in% maskGeneX)
 
   if(length(maskGeneInHits)==0){
     warning("No associations passing assocAlpha found for ",geneName)
     plotRegionGR <- NA
   }
 
-  allFoundSubJHits <- subjectHits(keepDegCreHits[maskGeneInHits])
-  maskHitsSubj <- which(subjectHits(keepDegCreHits) %in%
+  allFoundSubJHits <- S4Vectors::subjectHits(keepDegCreHits[maskGeneInHits])
+  maskHitsSubj <- which(S4Vectors::subjectHits(keepDegCreHits) %in%
     allFoundSubJHits)
 
   geneXPromCreHits <- keepDegCreHits[maskHitsSubj]
 
   allDegCreGRX <-
-    c(GenomicRanges::granges(DegGRX[queryHits(geneXPromCreHits)]),
-    GenomicRanges::granges(CreGRX[subjectHits(geneXPromCreHits)]))
+    c(GenomicRanges::granges(DegGRX[S4Vectors::queryHits(geneXPromCreHits)]),
+    GenomicRanges::granges(CreGRX[S4Vectors::subjectHits(geneXPromCreHits)]))
   plotRegionGR <- range(allDegCreGRX,ignore.strand=TRUE)
 
   return(plotRegionGR)

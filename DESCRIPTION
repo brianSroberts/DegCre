@@ -1,7 +1,7 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 0.99.12
+Version: 0.99.13
 Date: 2024-02-19
 Authors@R: person(given="Brian S.",
                   family="Roberts",
@@ -22,8 +22,8 @@ Description:
     for visualization and conversion to other formats.
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.2.3
-Depends: R (>= 4.2.0)
+RoxygenNote: 7.3.1
+Depends: R (>= 4.3.3)
 URL: https://github.com/brianSroberts/DegCre
 Imports:
 	GenomicRanges,
@@ -44,6 +44,8 @@ Suggests:
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg38,
     org.Hs.eg.db,
+    BiocStyle,
+    magick,
     knitr,
     rmarkdown,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
