@@ -1,3 +1,8 @@
+# CHANGES IN VERSION 0.99.14
+## BUG FIXES
+
+* Added imported packages to DESCRIPTION
+
 # CHANGES IN VERSION 0.99.13
 
 * Numerous code style changes made to comply with Bioconductor standards.
