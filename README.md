@@ -1,4 +1,4 @@
-# <img src="/man/figures/DegCreLogo.png" width="400px" style="background-color:white;border=transparent">
+# <p align="center"> <img src="/man/figures/DegCreLogo.png" width="300px" style="background-color:white;border=transparent"></p>
 
 # DegCre: Probabilistic association of DEGs to CREs from differential data
 
