@@ -58,7 +58,7 @@ binStats <- plotDegCreAssocProbVsDist(degCreResList=myDegCreResList,
 ```
 
 We can plot a gene of interest browser view using [plotgardner](https://bioconductor.org/packages/release/bioc/html/plotgardener.html) functionality:
-<img src="man/figures/browserExample.png" width="700px" style="display: block; margin: auto;" />
+<p align="center"> <img src="man/figures/browserExample.png" width="500px" style="display: block; margin: auto;" /></p>
 
 ```r
 browserOuts <- plotBrowserDegCre(degCreResList=myDegCreResList,
