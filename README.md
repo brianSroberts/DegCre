@@ -50,7 +50,7 @@ names(myDegCreResList)
 head(myDegCreResList$degCreHits)
 ```
 Next plot the association probability versus distance:
-<img src="man/figures/assocProbVsDist.png" width="400px" style="display: block; margin: auto;" />
+<p align="center"> <img src="man/figures/assocProbVsDist.png" width="400px" style="display: block; margin: auto;" /></p>
 
 ```r
 binStats <- plotDegCreAssocProbVsDist(degCreResList=myDegCreResList,
