@@ -1,3 +1,7 @@
+# CHANGES IN VERSION 0.99.16
+
+* Added utils to DESCRIPTION
+
 # CHANGES IN VERSION 0.99.15
 
 * Updated to use R 4.4.0
