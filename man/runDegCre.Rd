@@ -136,7 +136,7 @@ DegCre takes two inputs. The first is a GRanges of p-values and optionally
 log fold-changes associated with DEG TSSs.
 The second input is a GRanges of differential signal p-values and optionally
 log fold-changes for CRE regions.
-DegCre generates a /link[S4Vectors]{Hits} object of all associations between
+DegCre generates a \link[S4Vectors]{Hits} object of all associations between
 DEG TSSs and CREs within \code{maxDist}.
 Associations are then binned by TSS-to-CRE distance according to an
 algorithm that balances resolution (many bins with few members)
@@ -149,7 +149,7 @@ probability.
 For all association probabilities involving one given CRE, the probabilities
 are adjusted to favor associations across shorter distances.
 An FDR of the association probability is then estimated. Results are
-returned in list containing a /link[S4Vectors]{Hits} object and both
+returned in list containing a \link[S4Vectors]{Hits} object and both
 input GRanges.
 }
 \examples{

@@ -29,7 +29,7 @@ GenomicRanges objects (DegGR and CreGR) based on their spatial overlap
 within a specified maximum distance threshold using
 \link[GenomicRanges]{findOverlaps}. It calculates the distances with
 \link[GenomicRanges]{distance} between associated regions and stores them
-in the metadata of the /link[S4Vectors]{Hits} object.
+in the metadata of the \link[S4Vectors]{Hits} object.
 Large values \code{maxDist} will require more computational resources.
 }
 \examples{

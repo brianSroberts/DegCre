@@ -396,8 +396,8 @@ getDistBinNullAssocProb <- function(degCreResList) {
 #' @export
 changeColorAlpha <- function(colorVec, newAlpha = 80) {
     transColX <- unlist(lapply(colorVec,function(charFillColX){
-        rgbX <- as.numeric(col2rgb(charFillColX))
-        transColX <- rgb(red= rgbX[1],green= rgbX[2],
+        rgbX <- as.numeric(grDevices::col2rgb(charFillColX))
+        transColX <- grDevices::rgb(red= rgbX[1],green= rgbX[2],
             blue= rgbX[3],alpha= newAlpha, maxColorValue=255)
         return(transColX)
     }))

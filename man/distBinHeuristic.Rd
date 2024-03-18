@@ -13,7 +13,7 @@ distBinHeuristic(
 )
 }
 \arguments{
-\item{degCreHits}{A /link[S4Vectors]{Hits} object containing the
+\item{degCreHits}{A \link[S4Vectors]{Hits} object containing the
 associations between DEG (Differentially Expressed Genes) and CRE
 (Cis-Regulatory Element) hits with distances.}
 
@@ -40,7 +40,7 @@ A list containing:
 }
 }
 \description{
-Analyzes the associations between DEG and CRE /link[S4Vectors]{Hits} to
+Analyzes the associations between DEG and CRE \link[S4Vectors]{Hits} to
 determine the optimal distance bin size for further analysis.
 }
 \details{

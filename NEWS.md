@@ -1,3 +1,11 @@
+# CHANGES IN VERSION 0.99.15
+
+* Updated to use R 4.4.0
+
+* Added importFrom for grDevices and utils
+
+* Fixed typos in help files
+
 # CHANGES IN VERSION 0.99.14
 ## BUG FIXES
 
