@@ -1,14 +1,16 @@
 citHeader("To cite DegCre in publications use:")
 
 citEntry(entry = "Misc",
-  title    = "DegCre: Probabilistic association of differential gene expression with regulatory regions",
+  title    = "Probabilistic association of differentially expressed genes with cis-regulatory elements",
   author   = personList(as.person("Brian S. Roberts"),
+  						as.person("Ashlyn G. Anderson"),
+  						as.person("Chris Partridge"),
                         as.person("Gregory M. Cooper"),
                         as.person("Richard M. Myers")),
-  journal  = "bioRxiv",
-  year     = 2023,
-  url      = "https://www.biorxiv.org/content/10.1101/2023.10.04.560923v1",
-  doi = "10.1101/2023.10.04.560923",
-  textVersion = paste("Brian S. Roberts, Gregory M. Coope, Richard M. Myers,
-  DegCre: Probabilistic association of differential gene expression with regulatory regions, bioRxiv, 
-  2023") )
+  journal  = "Genome Research",
+  year     = 2024,
+  url      = "https://genome.cshlp.org/content/early/2024/04/16/gr.278598.123",
+  doi = "10.1101/gr.278598.123",
+  textVersion = paste("Brian S. Roberts, Ashlyn G. Anderson, Chris Partridge, Gregory M. Cooper, Richard M. Myers,
+  Probabilistic association of differentially expressed genes with cis-regulatory elements, Genome Research, 
+  2024") )
