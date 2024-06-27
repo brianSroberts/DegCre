@@ -17,7 +17,8 @@ optimizeAlphaDegCre(
   verbose = FALSE,
   smallestTestBinSize = 100,
   fracMinKsMedianThresh = 0.2,
-  testedAlphaVals = c(0.005, 0.01, 0.02, 0.03, 0.05, 0.1)
+  testedAlphaVals = c(0.005, 0.01, 0.02, 0.03, 0.05, 0.1),
+  minNDegs = 5
 )
 }
 \arguments{
@@ -64,6 +65,9 @@ optimization criterion for the distance bin size algorithm (See Details).
 
 \item{testedAlphaVals}{A numeric vector of DEG alpha values to test
 (Default: \code{c(0.005,0.01,0.02,0.03,0.05,0.1)}).}
+
+\item{minNDegs}{An integer specifying minimum number of DEGs that pass
+the lowest \code{testedAlphaVals}. (Default: \code{5})}
 }
 \value{
 A named list containing:

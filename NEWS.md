@@ -1,3 +1,11 @@
+# CHANGES IN VERSION 1.0.2
+
+* Changed citation to Genome Research article
+
+## BUG FIXES
+
+* Added parameter `minNDegs` to `optimizeAlphaDegCre` to stop it from trying `testedAlphaVals` that result in the number of passing DEGs to be too low for the optimization algorithm to function properly.
+
 # CHANGES IN VERSION 0.99.16
 
 * Added utils to DESCRIPTION

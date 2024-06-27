@@ -1,17 +1,17 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 1.1.0
-Date: 2024-03-18
-Authors@R: person(given="Brian S.",
+Version: 1.0.2
+Date: 2024-06-27
+Authors@R: c(person(given="Brian S.",
                   family="Roberts",
                   email = "brianroberts1976@yahoo.com",
                   role = c("aut", "cre"),
-                  comment=c(ORCID = "0009-0001-2914-6826"))
-Maintainer@R: person(given="Brian S.",
+                  comment=c(ORCID = "0009-0001-2914-6826")))
+Maintainer@R: c(person(given="Brian S.",
                      family="Roberts",
                      email = "brianroberts1976@yahoo.com",
-                     comment=c(ORCID = "0009-0001-2914-6826"))
+                     comment=c(ORCID = "0009-0001-2914-6826")))
 Description:
     DegCre generates associations between differentially expressed genes (DEGs)
     and cis-regulatory elements (CREs) based on non-parametric concordance 
