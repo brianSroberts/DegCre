@@ -636,7 +636,7 @@ optimizeAlphaDegCre <- function(DegGR,
     
     maskAlphaPass <- which(nDegsPass>=minNDegs)
     
-    if(length(maskAlphaPass)<length(testedAlphaVals)){
+    if(length(maskAlphaPass)<length(testedAlphaVals) & length(maskAlphaPass)>0){
       testedAlphaVals <- testedAlphaVals[maskAlphaPass]
       testAlphaWarn <- 
         paste("Dropping tested alphas resulting in too few DEGS.",
@@ -644,85 +644,126 @@ optimizeAlphaDegCre <- function(DegGR,
               sep="\n")
       warning(testAlphaWarn)
     }
-  
-    alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
-    names(testedAlphaVals) <- alphaValNames
-
-    degResForDistBinN <- runDegCre(DegGR=DegGR,
-            DegP=DegP,
-            DegLfc=DegLfc,
-            CreGR=CreGR,
-            CreP=CreP,
-            CreLfc=CreLfc,
-            reqEffectDirConcord=reqEffectDirConcord,
-            padjMethod="bonferroni",
-            maxDist=maxDist,
-            verbose=verbose,
-            alphaVal=0.01,
-            fracMinKsMedianThresh=fracMinKsMedianThresh,
-            smallestTestBinSize=smallestTestBinSize)
-
-    pickedDistBinN <- degResForDistBinN$binHeurOutputs$pickedBinSize
-
-    listByAlpha <- lapply(testedAlphaVals,function(alphaValX){
+    
+    #check if none of the testedAlphaVals meet too few DEG criteria
+    #if do not run optimization and force a pickedAlpha
+    runOptim <- TRUE
+    
+    if(length(maskAlphaPass)==0){
+      #how many values are non 1?
+      maskNon1 <- which(tempPadjs<1)
+      nNon1 <- length(maskNon1)
+      
+      if(length(nNon1)<minNDegs){
+        #there are not enough non-zero pAdjs to test.
+        #Bypass opimization and set optimal alpha to max non-zero
+        runOptim <- FALSE
+        pickedAlpha <- max(tempPadjs[maskNon1])
+        outMat <- matrix(c(pickedAlpha,0,0,0),nrow=1)
+        
+        outList$alphaPRMat <- outMat
+        outList$degCreResListsByAlpha <- NA
+      }
+      else{
+        non1Padjs <- tempPadjs[maskNon1]
+        minQProb <- minNDegs/length(non1Padjs)
+        maxQProb <- nNon1/length(non1Padjs)
+        midQProb <- mean(c(minQProb,maxQProb))
+        
+        testProbs <- c(minQProb,midQProb,maxQProb)
+        
+        testedAlphaVals <- quantile(tempPadjs,probs=testProbs)
+        testAlphaWarn <- 
+          paste("Recalculated alphas to make usable DEG sets.",
+                paste("New tested alphas =",
+                      paste(testedAlphaVals,collapse=",")),
+                sep="\n")
+        warning(testAlphaWarn)
+      }
+    }
+    
+    if(runOptim){
+      
+      alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
+      names(testedAlphaVals) <- alphaValNames
+      
+      degResForDistBinN <- runDegCre(DegGR=DegGR,
+                                     DegP=DegP,
+                                     DegLfc=DegLfc,
+                                     CreGR=CreGR,
+                                     CreP=CreP,
+                                     CreLfc=CreLfc,
+                                     reqEffectDirConcord=reqEffectDirConcord,
+                                     padjMethod="bonferroni",
+                                     maxDist=maxDist,
+                                     verbose=verbose,
+                                     alphaVal=0.01,
+                                     fracMinKsMedianThresh=fracMinKsMedianThresh,
+                                     smallestTestBinSize=smallestTestBinSize)
+      
+      pickedDistBinN <- degResForDistBinN$binHeurOutputs$pickedBinSize
+      
+      listByAlpha <- lapply(testedAlphaVals,function(alphaValX){
         if(verbose){
-            message("Testing alpha = ",alphaValX)
+          message("Testing alpha = ",alphaValX)
         }
-
+        
         degCreOutX <- runDegCre(DegGR=DegGR,
-            DegP=DegP,
-            DegLfc=DegLfc,
-            CreGR=CreGR,
-            CreP=CreP,
-            CreLfc=CreLfc,
-            reqEffectDirConcord=reqEffectDirConcord,
-            padjMethod="bonferroni",
-            maxDist=maxDist,
-            verbose=verbose,
-            alphaVal=alphaValX,
-            fracMinKsMedianThresh=fracMinKsMedianThresh,
-            binNOverride=pickedDistBinN,
-            smallestTestBinSize=smallestTestBinSize)
-
+                                DegP=DegP,
+                                DegLfc=DegLfc,
+                                CreGR=CreGR,
+                                CreP=CreP,
+                                CreLfc=CreLfc,
+                                reqEffectDirConcord=reqEffectDirConcord,
+                                padjMethod="bonferroni",
+                                maxDist=maxDist,
+                                verbose=verbose,
+                                alphaVal=alphaValX,
+                                fracMinKsMedianThresh=fracMinKsMedianThresh,
+                                binNOverride=pickedDistBinN,
+                                smallestTestBinSize=smallestTestBinSize)
+        
         #now get PR Auc values
         PRAucResX <- degCrePRAUC(degCreOutX,
-            makePlot=FALSE,
-            nShuff=10,
-            alphaVal=alphaValX)
-
+                                 makePlot=FALSE,
+                                 nShuff=10,
+                                 alphaVal=alphaValX)
+        
         outList <- degCreOutX
         outList$binHeurOutputs <- degResForDistBinN$binHeurOutputs
         outList$AUC <- PRAucResX$AUC
         outList$deltaAUC <- PRAucResX$deltaAUC
         outList$normDeltaAUC <- PRAucResX$normDeltaAUC
         return(outList)
-    })
-
-    allAUC <- unlist(lapply(listByAlpha,function(x){
+      })
+      
+      allAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$AUC)
-    }))
-
-    allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+      }))
+      
+      allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$deltaAUC)
-    }))
-
-    allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+      }))
+      
+      allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$normDeltaAUC)
-    }))
-
-    outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
-    colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
-    outList <- list()
-
-    #clean up listByAlpha to not have AUC values
-
-    listKeepByAlpha <- lapply(listByAlpha,function(listX){
+      }))
+      
+      outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
+      colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
+      outList <- list()
+      
+      #clean up listByAlpha to not have AUC values
+      
+      listKeepByAlpha <- lapply(listByAlpha,function(listX){
         outList <- listX[seq_len(5)]
         return(outList)
-    })
-
-    outList$alphaPRMat <- outMat
-    outList$degCreResListsByAlpha <- listKeepByAlpha
+      })
+      
+      outList$alphaPRMat <- outMat
+      outList$degCreResListsByAlpha <- listKeepByAlpha
+    }
+    
     return(outList)
 }
 
