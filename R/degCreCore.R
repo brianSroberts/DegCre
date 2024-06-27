@@ -661,8 +661,14 @@ optimizeAlphaDegCre <- function(DegGR,
         pickedAlpha <- max(tempPadjs[maskNon1])
         outMat <- matrix(c(pickedAlpha,0,0,0),nrow=1)
         
+        outList <- list()
         outList$alphaPRMat <- outMat
         outList$degCreResListsByAlpha <- NA
+        
+        warnMsg <- 
+          "Not enough non unity DEG adjusted pvalues. Returning highest non-unity"
+        
+        warning(warnMsg)
       }
       else{
         non1Padjs <- tempPadjs[maskNon1]
