@@ -551,6 +551,8 @@ runDegCre <- function(DegGR,
 #' (Default: \code{0.2})
 #' @param testedAlphaVals A numeric vector of DEG alpha values to test
 #' (Default: \code{c(0.005,0.01,0.02,0.03,0.05,0.1)}).
+#' @param minNDegs An integer specifying minimum number of DEGs that pass
+#' the lowest \code{testedAlphaVals}. (Default: \code{5})
 #'
 #' @return A named list containing:
 #' \describe{
@@ -620,9 +622,30 @@ optimizeAlphaDegCre <- function(DegGR,
                                 smallestTestBinSize=100,
                                 fracMinKsMedianThresh=0.2,
                                 testedAlphaVals=c(0.005,0.01,0.02,
-                                0.03,0.05,0.1)){
-
-      alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
+                                0.03,0.05,0.1),
+                                minNDegs=5){
+    
+    #do not test DEG alpha vals so low that it does not result in at least
+    #minNDegs passing alpha. The optimization algorithm requires a quorum
+    #of passing DEGs to be valid
+    tempPadjs <- p.adjust(DegP,method = padjMethod)
+    
+    nDegsPass <- unlist(lapply(testedAlphaVals,function(alphaX){
+      return(length(which(tempPadjs<=alphaX)))
+    }))
+    
+    maskAlphaPass <- which(nDegsPass>=minNDegs)
+    
+    if(length(maskAlphaPass)<length(testedAlphaVals)){
+      testedAlphaVals <- testedAlphaVals[maskAlphaPass]
+      testAlphaWarn <- 
+        paste("Dropping tested alphas resulting in too few DEGS.",
+              paste("New tested alphas =",paste(testedAlphaVals,collapse=",")),
+              sep="\n")
+      warning(testAlphaWarn)
+    }
+  
+    alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
     names(testedAlphaVals) <- alphaValNames
 
     degResForDistBinN <- runDegCre(DegGR=DegGR,
