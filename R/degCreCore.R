@@ -730,40 +730,16 @@ optimizeAlphaDegCre <- function(DegGR,
                                 smallestTestBinSize=smallestTestBinSize)
         
         #now get PR Auc values
-        #6/27/2024
-        #try a different optimization strategy
-        #this approach is to maxmize the curve of unique CRE pVals
-        #vs RawAssocProbOR
-        
-        #get rawORs
-        rawORs <- calcRawAssocProbOR(degCreOutX)
-        
-        rawORsPerUniqCrePval <- 
-          tapply(rawORs,
-                 INDEX=mcols(degCreOutX$degCreHits)$CreP,
-                 FUN=median)
-        
-        rawORsPerUniqCrePval <- as.numeric(rawORsPerUniqCrePval)
-        uniqCrePs <- as.numeric(names(rawORsPerUniqCrePval))
-        
-        #order by pvals
-        rawORsPerUniqCrePval <- 
-          rawORsPerUniqCrePval[order(uniqCrePs,decreasing=TRUE)]
-        
-        #get AUC
-        rawORAUC <- calcAUC(xVals=c(1:length(rawORsPerUniqCrePval)),
-                            yVals=rawORsPerUniqCrePval)
-        
-        # PRAucResX <- degCrePRAUC(degCreOutX,
-        #                          makePlot=FALSE,
-        #                          nShuff=10,
-        #                          alphaVal=alphaValX)
+        PRAucResX <- degCrePRAUC(degCreOutX,
+                                 makePlot=FALSE,
+                                 nShuff=10,
+                                 alphaVal=alphaValX)
         
         outList <- degCreOutX
         outList$binHeurOutputs <- degResForDistBinN$binHeurOutputs
-        outList$AUC <- rawORAUC
-        #outList$deltaAUC <- PRAucResX$deltaAUC
-        #outList$normDeltaAUC <- PRAucResX$normDeltaAUC
+        outList$AUC <- PRAucResX$AUC
+        outList$deltaAUC <- PRAucResX$deltaAUC
+        outList$normDeltaAUC <- PRAucResX$normDeltaAUC
         return(outList)
       })
       
@@ -771,19 +747,16 @@ optimizeAlphaDegCre <- function(DegGR,
         return(x$AUC)
       }))
       
-      # allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
-      #   return(x$deltaAUC)
-      # }))
-      # 
-      # allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
-      #   return(x$normDeltaAUC)
-      # }))
+      allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+        return(x$deltaAUC)
+      }))
+
+      allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+        return(x$normDeltaAUC)
+      }))
       
-      outMat <- cbind(testedAlphaVals,allAUC)
-      colnames(outMat) <- c("alphaVal","AUC")
-      
-      # outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
-      # colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
+      outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
+      colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
       
       outList <- list()
       
@@ -879,7 +852,7 @@ degCrePRAUC <- function(degCreResList,
                         alphaVal=degCreResList$alphaVal,
                         nThresh=200){
 
-       hitsDegCre <- degCreResList$degCreHits
+    hitsDegCre <- degCreResList$degCreHits
     assocProb <- S4Vectors::mcols(hitsDegCre)$assocProb
 
     expectedDEGPos <- rep(0,length(hitsDegCre))
