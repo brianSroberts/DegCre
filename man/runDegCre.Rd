@@ -12,7 +12,7 @@ runDegCre(
   CreP,
   CreLfc = NULL,
   reqEffectDirConcord = TRUE,
-  padjMethod = "bonferroni",
+  padjMethod = "qvalue",
   maxDist = 1e+06,
   verbose = TRUE,
   smallestTestBinSize = 100,
@@ -47,7 +47,7 @@ the effect direction between DEG and CRE differential values.
 
 \item{padjMethod}{A character value indicating the method for p-value
 adjustment. Do not change from default under most circumstances. Can be any
-method name accepted by \link[stats]{p.adjust} (Default: \code{bonferroni})}
+method name accepted by \link[stats]{p.adjust} (Default: \code{qvalue})}
 
 \item{maxDist}{An integer value specifying the maximum distance for
 probability calculation of TSS to CRE associations. (Default: \code{1e6})}

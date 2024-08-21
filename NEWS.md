@@ -1,3 +1,23 @@
+# CHANGES IN VERSION 1.1.0.9000
+
+## NEW FEATURES
+
+* `runDegCre` now accepts `"qvalue"` as an input to `pAdjMethod` which is now the default. Our testing shows that this method improves the performance of DegCre predictions. The qvalue calculation does not require the used to specify a `alphaVal`.
+
+* Added new function `collapseDegCreToGene` which converts DegCre results for gene with multiple TSSs to use only the association that spans the shortest distance.
+
+* Added new function `calcAssocProbOR` that calculates the odds-ratio for DegCre association probabilities. This function can operate on `assocProb` or `rawAssocProb` values by altering the `type` flag. It is meant to replace `calcRawAssocProbOR`.
+
+* Added new function `convDegCreResListToCreGeneScoreGR` that converts DegCre results to a simplified `GRanges` with the predicted gene and score as metadata.
+
+## OTHER CHANGES
+
+* Streamlined `runDegCre` code to use more subfunctions.
+
+##BUG FIXES
+
+* Changed the internal function `makePlotGInter` to return a sorted `GInteractions` to avoid inconsistent returns.
+
 # CHANGES IN VERSION 1.0.2
 
 * Changed citation to Genome Research article

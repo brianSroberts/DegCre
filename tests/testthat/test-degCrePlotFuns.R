@@ -71,8 +71,8 @@ test_that("plotDegCreAssocProbVsDist", {
 
   # check assocDistMat
   testRows <-c(1,3,5,10,12,16)
-  testMedians <- c(0.27720000,0.14430000,0.10913043,0.10129344,0.07563284,
-                   0.08984293)
+  testMedians <- c(0.4627001,0.2445692,0.2360954,0.1623336,0.1862349,
+                   0.1997442)
 
   expect_equal(assocDistMat[testRows,3],testMedians,tolerance=1e-5)
 })
@@ -98,8 +98,8 @@ test_that("getDistBinNullAssocProb", {
   calcNullMat <- getDistBinNullAssocProb(degCreResList = degCreResListDexNR3C1)
 
   testRows <- c(1,2,4,6,12,14,16)
-  testNullProbs <- c(0.18956522,0.12826087,0.12695652,0.10565217,0.06739130,
-                     0.07521739,0.08984293)
+  testNullProbs <- c(0.22434783,0.14565217,0.14304348,0.11913043,0.07956522,
+                     0.08086957,0.10280105)
 
   expect_equal(calcNullMat[testRows,2],testNullProbs,tolerance=1e-5)
 })

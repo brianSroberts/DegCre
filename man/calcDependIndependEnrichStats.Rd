@@ -9,6 +9,7 @@ calcDependIndependEnrichStats(
   subHitsIndex,
   dependPadj,
   independP,
+  etpFun,
   alpha
 )
 }
@@ -23,6 +24,9 @@ analyze.}
 data.}
 
 \item{independP}{Numeric vector of p-values for the independent data.}
+
+\item{etpFun}{Function for converting sets of dependPadj to expected true
+postives. Passed from \link{calcPadjsAndEtpFun}.}
 
 \item{alpha}{Numeric significance level threshold for DEGs.}
 }
@@ -41,7 +45,7 @@ and independent data based on provided adjusted p-values for dependent data
 and p-values for independent data. It computes the associated probabilities,
 which represent the probability of observing a significant association for
 each set of data under the specified significance level threshold.
-the independent variable is DegCre calculations is the CreP and the
+the independent variable in DegCre calculations is the CreP and the
 dependent is the DEG adjusted p-values.
 It is meant to run within \link{runDegCre}. It will not run well on
 unintended inputs.
@@ -53,6 +57,7 @@ statsMatrix <- calcDependIndependEnrichStats(hitsWithDistDf = myHitsDf,
                                              subHitsIndex = mySubHits,
                                              dependPadj = myDependPadj,
                                              independP = myIndependP,
+                                             etpFun = myEtpFun,
                                              alpha = 0.05)
 }
 

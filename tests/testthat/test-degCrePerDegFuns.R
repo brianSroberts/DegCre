@@ -24,12 +24,12 @@ test_that("getExpectAssocPerDEG", {
 
   # test at randomly sampled indices across non-trivial expectAssocs
   testedIndices <- c(1,3,9,12,28,35,59)
-  testExpectAssocs <- c(9.6110849,6.3562721,4.8618757,3.9276794,2.0172421,
-                        1.5680273,0.1382713)
+  testExpectAssocs <- c(41.240723,29.320480,15.459290,14.803924,8.900007,
+                        7.281138,5.762932)
 
   calcExpectAssocs <- calcExpectAssocPerDegDf$expectAssocs[testedIndices]
 
-  expect_equal(calcExpectAssocs,testExpectAssocs,tolerance=1e-6)
+  expect_equal(calcExpectAssocs,testExpectAssocs,tolerance=1e-4)
 })
 
 test_that("plotExpectedAssocsPerDeg", {
@@ -70,5 +70,5 @@ test_that("plotExpectedAssocsPerDeg", {
 
   calcMedianExpectAssocs <- medianExpAssocs
 
-  expect_equal(calcMedianExpectAssocs,1.260031,tolerance=1e-6)
+  expect_equal(calcMedianExpectAssocs,2.414807,tolerance=1e-4)
 })

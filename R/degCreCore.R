@@ -18,6 +18,8 @@
 #' @importFrom grDevices colorRampPalette dev.size rgb col2rgb
 #' @importFrom utils head tail
 #' @importFrom plotgardener colorby plotPairsArches annoHeatmapLegend plotSignal annoYaxis plotGenomeLabel plotGenes plotText pageCreate
+#' @importFrom qvalue lfdr
+#' @importFrom BiocParallel bpparam SerialParam MulticoreParam bplapply
 "_PACKAGE"
 
 #' DegCre input data for examples.
@@ -86,7 +88,7 @@ NULL
 #' (Default: \code{TRUE})
 #' @param padjMethod A character value indicating the method for p-value
 #' adjustment. Do not change from default under most circumstances. Can be any
-#' method name accepted by \link[stats]{p.adjust} (Default: \code{bonferroni})
+#' method name accepted by \link[stats]{p.adjust} (Default: \code{qvalue})
 #' @param maxDist An integer value specifying the maximum distance for
 #' probability calculation of TSS to CRE associations. (Default: \code{1e6})
 #' @param verbose A logical indicating whether to print messages of step
@@ -220,7 +222,7 @@ runDegCre <- function(DegGR,
                    CreP,
                    CreLfc = NULL,
                    reqEffectDirConcord = TRUE,
-                   padjMethod = "bonferroni",
+                   padjMethod = "qvalue",
                    maxDist = 1e6,
                    verbose = TRUE,
                    smallestTestBinSize = 100,
@@ -234,12 +236,14 @@ runDegCre <- function(DegGR,
               reqEffectDirConcord = TRUE; returning NA")
         return(NA)
     }
-
-    outPadj <- rep(NA,length(DegP))
-    maskNoNAPProm <- which(!is.na(DegP))
-    noNaPadj <- p.adjust(DegP[maskNoNAPProm],method=padjMethod)
-    outPadj[maskNoNAPProm] <- noNaPadj
-    DegPadj <- outPadj
+  
+    #Get adjusted p-values and expected true postive fraction from selected
+    #padjMethod
+    pAdjList <- calcPadjsAndEtpFun(pVal = DegP,method = padjMethod)
+    
+    DegPadj <- pAdjList$pAdj
+    
+    etpFun <- pAdjList$etpFun
 
     #add pVals and pAdj to input GRs with controlled column names
     #for downstream functions
@@ -326,53 +330,15 @@ runDegCre <- function(DegGR,
     #going to sort degCreHits by distance rather than queryHits which
     #makes Hits mad. Convert to a dataframe for a while
     promCreHitsDf <- as.data.frame(degCreHits)
-
-    sortPromCreHitsDf <- 
+    
+    sortPromCreHitsDf <-
       promCreHitsDf[order(promCreHitsDf$assocDist),,drop=FALSE]
-
-    numHits <- nrow(sortPromCreHitsDf)
-
-    allSortHitIndices <- seq_len(numHits)
-
-    rawSortHitChunksList <- split(allSortHitIndices,
-        ceiling(seq_along(allSortHitIndices)/(pickedBinSize)))
-
-    #last bin can be small, fix if too small.
-    #Too small is less than half pickedBinSize
-    if(length(rawSortHitChunksList[length(rawSortHitChunksList)]) <
-        0.8*pickedBinSize){
-        #if last bin is too small, split the last two bins into
-        #bins with equal number of hits
-        last2RawSortChunkIndices <-
-            c(rawSortHitChunksList[[(length(rawSortHitChunksList)-1)]],
-            rawSortHitChunksList[[length(rawSortHitChunksList)]])
-
-        last2MidPoint <- floor(length(last2RawSortChunkIndices)/2)
-
-        rawSortHitChunksList[[(length(rawSortHitChunksList)-1)]] <-
-            last2RawSortChunkIndices[seq_len(last2MidPoint)]
-
-        rawSortHitChunksList[[length(rawSortHitChunksList)]] <-
-            last2RawSortChunkIndices[(last2MidPoint+1):
-                length(last2RawSortChunkIndices)]
-
-        sortHitChunksList <- rawSortHitChunksList
-
-        if(verbose){
-            message("Small last bin resolved.")
-        }
-    }
-    else{
-        sortHitChunksList <- rawSortHitChunksList
-    }
-
-
-    #calculate association probs
-    if(verbose){
-        message("Running over ",
-            length(sortHitChunksList)," hit distance thresholds")
-    }
-
+    
+    sortHitChunksList <- 
+      makeDistBinChunkList(sortHitsWithDistDf=sortPromCreHitsDf,
+                           pickedBinSize=pickedBinSize,
+                           verbose=verbose)
+    
     #add bin membership data to HitsDf
 
     distBinId <- unlist(lapply(seq_along(sortHitChunksList),function(binIdX){
@@ -383,7 +349,13 @@ runDegCre <- function(DegGR,
     sortPromCreHitsDf <- data.frame(sortPromCreHitsDf,distBinId)
 
     #distance binning is complete. Now run probability calculations
-
+    
+    #calculate association probs
+    if(verbose){
+      message("Running over ",
+              length(sortHitChunksList)," hit distance thresholds")
+    }
+    
     listStatsPerChunk <- lapply(sortHitChunksList,function(chunkIx){
 
         #first calc the probs of the CREs associating with a DEG
@@ -392,6 +364,7 @@ runDegCre <- function(DegGR,
             subHitsIndex=chunkIx,
             dependPadj=DegPadj,
             independP=CreP,
+            etpFun=etpFun,
             alpha=alphaVal)
 
         maxAssocDist <- max(sortPromCreHitsDf$assocDist[chunkIx])
@@ -406,17 +379,17 @@ runDegCre <- function(DegGR,
     #colnames of rawAllDistBinsStatsMat:
     #"independP","assocProb","totalObs","binAssocDist"
 
-    #adjust association probs by the whether the DEG is
-    #differentially expressed, i.e. if DEG padj <= alphaVal
+    #adjust association probs by the whether the DEG is truly differentially
+    #expressed (depends on padjMethod)
     sortDegPadj <- DegPadj[sortPromCreHitsDf[,1]]
-
-    sortDegTruePosProb <- rep(0,length(sortDegPadj))
-    sortDegTruePosProb[which(sortDegPadj<=alphaVal)] <- 1
-
-    adjAssocProb <- sortDegTruePosProb*rawAllDistBinsStatsMat[,2]
-
-    sortDegP <- DegP[sortPromCreHitsDf[,1]]
-
+    rawAssocProbs <- rawAllDistBinsStatsMat[,2]
+    
+    adjAssocProb <- adjustRawAssocProb(rawAssocProbs=rawAssocProbs,
+                                   pAdjs=sortDegPadj,
+                                   alphaVal=alphaVal,
+                                   method=padjMethod)
+    
+    #now adjust assoc probs for distance
     if(verbose){
         message("Adjusting association probability for distance.")
     }
@@ -427,6 +400,8 @@ runDegCre <- function(DegGR,
         refAssocProbs=adjAssocProb)
 
     #collect results up to here
+    sortDegP <- DegP[sortPromCreHitsDf[,1]]
+    
     allDistBinsStatsMat <- cbind(corrAdjAssocProb,rawAllDistBinsStatsMat[,2],
         rawAllDistBinsStatsMat[,1],sortDegP,sortDegPadj,
         rawAllDistBinsStatsMat[,4],rawAllDistBinsStatsMat[,3])
@@ -457,8 +432,7 @@ runDegCre <- function(DegGR,
     if(verbose){
         message("Assoc FDR calculation complete.")
     }
-
-
+    
     #add Ps  of associations; reorder too
     allDistBinsStatsMat <- cbind(allDistBinsStatsMat[,1,drop=FALSE],
         allAssocProbFDR,
@@ -636,7 +610,7 @@ optimizeAlphaDegCre <- function(DegGR,
     
     maskAlphaPass <- which(nDegsPass>=minNDegs)
     
-    if(length(maskAlphaPass)<length(testedAlphaVals)){
+    if(length(maskAlphaPass)<length(testedAlphaVals) & length(maskAlphaPass)>0){
       testedAlphaVals <- testedAlphaVals[maskAlphaPass]
       testAlphaWarn <- 
         paste("Dropping tested alphas resulting in too few DEGS.",
@@ -644,85 +618,133 @@ optimizeAlphaDegCre <- function(DegGR,
               sep="\n")
       warning(testAlphaWarn)
     }
-  
-    alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
-    names(testedAlphaVals) <- alphaValNames
-
-    degResForDistBinN <- runDegCre(DegGR=DegGR,
-            DegP=DegP,
-            DegLfc=DegLfc,
-            CreGR=CreGR,
-            CreP=CreP,
-            CreLfc=CreLfc,
-            reqEffectDirConcord=reqEffectDirConcord,
-            padjMethod="bonferroni",
-            maxDist=maxDist,
-            verbose=verbose,
-            alphaVal=0.01,
-            fracMinKsMedianThresh=fracMinKsMedianThresh,
-            smallestTestBinSize=smallestTestBinSize)
-
-    pickedDistBinN <- degResForDistBinN$binHeurOutputs$pickedBinSize
-
-    listByAlpha <- lapply(testedAlphaVals,function(alphaValX){
+    
+    #check if none of the testedAlphaVals meet too few DEG criteria
+    #if do not run optimization and force a pickedAlpha
+    runOptim <- TRUE
+    
+    if(length(maskAlphaPass)==0){
+      #how many values are non 1?
+      maskNon1 <- which(tempPadjs<1)
+      nNon1 <- length(maskNon1)
+      
+      if(length(nNon1)<minNDegs){
+        #there are not enough non-zero pAdjs to test.
+        #Bypass opimization and set optimal alpha to max non-zero
+        runOptim <- FALSE
+        pickedAlpha <- max(tempPadjs[maskNon1])
+        outMat <- matrix(c(pickedAlpha,0,0,0),nrow=1)
+        
+        outList <- list()
+        outList$alphaPRMat <- outMat
+        outList$degCreResListsByAlpha <- NA
+        
+        warnMsg <- 
+          "Not enough non unity DEG adjusted pvalues. Returning highest non-unity"
+        
+        warning(warnMsg)
+      }
+      else{
+        non1Padjs <- tempPadjs[maskNon1]
+        minQProb <- minNDegs/length(non1Padjs)
+        maxQProb <- nNon1/length(non1Padjs)
+        midQProb <- mean(c(minQProb,maxQProb))
+        
+        testProbs <- c(minQProb,midQProb,maxQProb)
+        
+        testedAlphaVals <- quantile(tempPadjs,probs=testProbs)
+        testAlphaWarn <- 
+          paste("Recalculated alphas to make usable DEG sets.",
+                paste("New tested alphas =",
+                      paste(testedAlphaVals,collapse=",")),
+                sep="\n")
+        warning(testAlphaWarn)
+      }
+    }
+    
+    if(runOptim){
+      
+      alphaValNames <- paste("alpha",testedAlphaVals,sep="_")
+      names(testedAlphaVals) <- alphaValNames
+      
+      degResForDistBinN <- runDegCre(DegGR=DegGR,
+                                     DegP=DegP,
+                                     DegLfc=DegLfc,
+                                     CreGR=CreGR,
+                                     CreP=CreP,
+                                     CreLfc=CreLfc,
+                                     reqEffectDirConcord=reqEffectDirConcord,
+                                     padjMethod="bonferroni",
+                                     maxDist=maxDist,
+                                     verbose=verbose,
+                                     alphaVal=0.01,
+                                     fracMinKsMedianThresh=fracMinKsMedianThresh,
+                                     smallestTestBinSize=smallestTestBinSize)
+      
+      pickedDistBinN <- degResForDistBinN$binHeurOutputs$pickedBinSize
+      
+      listByAlpha <- lapply(testedAlphaVals,function(alphaValX){
         if(verbose){
-            message("Testing alpha = ",alphaValX)
+          message("Testing alpha = ",alphaValX)
         }
-
+        
         degCreOutX <- runDegCre(DegGR=DegGR,
-            DegP=DegP,
-            DegLfc=DegLfc,
-            CreGR=CreGR,
-            CreP=CreP,
-            CreLfc=CreLfc,
-            reqEffectDirConcord=reqEffectDirConcord,
-            padjMethod="bonferroni",
-            maxDist=maxDist,
-            verbose=verbose,
-            alphaVal=alphaValX,
-            fracMinKsMedianThresh=fracMinKsMedianThresh,
-            binNOverride=pickedDistBinN,
-            smallestTestBinSize=smallestTestBinSize)
-
+                                DegP=DegP,
+                                DegLfc=DegLfc,
+                                CreGR=CreGR,
+                                CreP=CreP,
+                                CreLfc=CreLfc,
+                                reqEffectDirConcord=reqEffectDirConcord,
+                                padjMethod="bonferroni",
+                                maxDist=maxDist,
+                                verbose=verbose,
+                                alphaVal=alphaValX,
+                                fracMinKsMedianThresh=fracMinKsMedianThresh,
+                                binNOverride=pickedDistBinN,
+                                smallestTestBinSize=smallestTestBinSize)
+        
         #now get PR Auc values
         PRAucResX <- degCrePRAUC(degCreOutX,
-            makePlot=FALSE,
-            nShuff=10,
-            alphaVal=alphaValX)
-
+                                 makePlot=FALSE,
+                                 nShuff=10,
+                                 alphaVal=alphaValX)
+        
         outList <- degCreOutX
         outList$binHeurOutputs <- degResForDistBinN$binHeurOutputs
         outList$AUC <- PRAucResX$AUC
         outList$deltaAUC <- PRAucResX$deltaAUC
         outList$normDeltaAUC <- PRAucResX$normDeltaAUC
         return(outList)
-    })
-
-    allAUC <- unlist(lapply(listByAlpha,function(x){
+      })
+      
+      allAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$AUC)
-    }))
-
-    allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+      }))
+      
+      allDeltaAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$deltaAUC)
-    }))
+      }))
 
-    allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
+      allNormDeltaAUC <- unlist(lapply(listByAlpha,function(x){
         return(x$normDeltaAUC)
-    }))
-
-    outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
-    colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
-    outList <- list()
-
-    #clean up listByAlpha to not have AUC values
-
-    listKeepByAlpha <- lapply(listByAlpha,function(listX){
+      }))
+      
+      outMat <- cbind(testedAlphaVals,allAUC,allDeltaAUC,allNormDeltaAUC)
+      colnames(outMat) <- c("alphaVal","AUC","deltaAUC","normDeltaAUC")
+      
+      outList <- list()
+      
+      #clean up listByAlpha to not have AUC values
+      
+      listKeepByAlpha <- lapply(listByAlpha,function(listX){
         outList <- listX[seq_len(5)]
         return(outList)
-    })
-
-    outList$alphaPRMat <- outMat
-    outList$degCreResListsByAlpha <- listKeepByAlpha
+      })
+      
+      outList$alphaPRMat <- outMat
+      outList$degCreResListsByAlpha <- listKeepByAlpha
+    }
+    
     return(outList)
 }
 
@@ -804,7 +826,7 @@ degCrePRAUC <- function(degCreResList,
                         alphaVal=degCreResList$alphaVal,
                         nThresh=200){
 
-       hitsDegCre <- degCreResList$degCreHits
+    hitsDegCre <- degCreResList$degCreHits
     assocProb <- S4Vectors::mcols(hitsDegCre)$assocProb
 
     expectedDEGPos <- rep(0,length(hitsDegCre))
@@ -1238,6 +1260,8 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 #' @param dependPadj Numeric vector of adjusted p-values for the dependent
 #' data.
 #' @param independP Numeric vector of p-values for the independent data.
+#' @param etpFun Function for converting sets of dependPadj to expected true
+#' postives. Passed from \link{calcPadjsAndEtpFun}.
 #' @param alpha Numeric significance level threshold for DEGs.
 #'
 #' @return A matrix containing calculated statistics for enrichment analysis,
@@ -1250,7 +1274,7 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 #' and p-values for independent data. It computes the associated probabilities,
 #' which represent the probability of observing a significant association for
 #' each set of data under the specified significance level threshold.
-#' the independent variable is DegCre calculations is the CreP and the
+#' the independent variable in DegCre calculations is the CreP and the
 #' dependent is the DEG adjusted p-values.
 #' It is meant to run within \link{runDegCre}. It will not run well on
 #' unintended inputs.
@@ -1264,6 +1288,7 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 #'                                              subHitsIndex = mySubHits,
 #'                                              dependPadj = myDependPadj,
 #'                                              independP = myIndependP,
+#'                                              etpFun = myEtpFun,
 #'                                              alpha = 0.05)
 #' }
 #'
@@ -1272,52 +1297,53 @@ getAssocDistHits <- function(DegGR, CreGR, maxDist = 1e6) {
 calcDependIndependEnrichStats <- function(hitsWithDistDf, subHitsIndex,
                                           dependPadj,
                                           independP,
+                                          etpFun,
                                           alpha) {
-
+  
   totalObs <- nrow(hitsWithDistDf[subHitsIndex,,drop=FALSE])
-
+  
   subjHitsTemp <- hitsWithDistDf[subHitsIndex,2]
   queryHitsTemp <- hitsWithDistDf[subHitsIndex,1]
-
+  
   # To run faster, run across approximately equal independent p-values
-
+  
   log10P <- log10(independP[subjHitsTemp])
   log10RoundedP <- round(log10P, digits = 1)
-
+  
   listMapLog10RoundedAllToUniq <- tapply(seq_along(log10RoundedP),
                                          INDEX = log10RoundedP,
                                          FUN = c)
-
+  
   uniqlog10RoundedP <- as.numeric(names(listMapLog10RoundedAllToUniq))
-
+  
   mapUniqToLog10RoundedAll <- unlist(listMapLog10RoundedAllToUniq)
-
+  
   mapUniqRepTimes <- lapply(listMapLog10RoundedAllToUniq, length)
-
+  
   # Filter to hit_df by p threshold
   AssocProbByPThreshUniq <- unlist(lapply(uniqlog10RoundedP,function(threshPX){
     maskHitsPass <- which(log10RoundedP <= threshPX)
+    maskAssocQueries <- queryHitsTemp[maskHitsPass]
+    
     # The total number of "calls" is the length of maskHitsPass
     allPosCalls <- length(maskHitsPass)
-
-    maskAssocQueries <- queryHitsTemp[maskHitsPass]
-    numPassAlpha <- length(which(dependPadj[maskAssocQueries] <= alpha))
-
-    truePosCalls <- numPassAlpha * (1 - alpha)
-
+    
+    truePosCalls <- etpFun(subsetPAdjs=dependPadj[maskAssocQueries],
+                           alpha=alpha)
+    
     expectProb <- truePosCalls / allPosCalls
     return(expectProb)
   }))
-
+  
   # Convert AssocProbByPThreshUniq to the original (un-unique) set
   AssocProbByPThresh <- numeric(length = length(log10RoundedP))
   AssocProbByPThresh[mapUniqToLog10RoundedAll] <-
     rep(AssocProbByPThreshUniq, times = mapUniqRepTimes)
-
+  
   allPMat <- cbind(independP[subjHitsTemp], AssocProbByPThresh, totalObs)
-
+  
   colnames(allPMat) <- c("independP", "assocProb", "totalObs")
-
+  
   return(allPMat)
 }
 
@@ -1561,3 +1587,203 @@ calcAUC <- function(xVals, yVals) {
   return(auc)
 }
 
+#' Convert a Hits object to association distance list
+#'
+#' Convert a Hits of DEG to CRES with distance to a list broken into distance
+#' bins
+#'
+#' @param sortHitsWithDistDf A \link[S4Vectors]{DataFrame} with queryHits and
+#' subjectHits from a \link[S4Vectors]{Hits} object. They must be sorted by
+#' increasing association distance.
+#' 
+#' @param pickedBinSize The number of associations per bin.
+#'
+#' @return A list of \link[S4Vectors]{DataFrame}(s) with 
+#' \code{pickedBinSize} associations, grouped by distance.
+#'
+#' @details
+#' Not exported. This function splits by the associations by distance to create
+#' bins with equal number of elements. The last bin is merged to the second to
+#' last bin if it is smaller than 0.8*\code{pickedBinSize}.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' outChunkList <- makeDistBinChunkList(inSortHitsWithDistDf,pickedBinSize=1000)
+#' }
+#' @author Brian S. Roberts
+#'
+makeDistBinChunkList <- function(sortHitsWithDistDf,
+                                 pickedBinSize,
+                                 verbose=FALSE){
+  
+  sortPromCreHitsDf <- sortHitsWithDistDf
+  
+  numHits <- nrow(sortPromCreHitsDf)
+  
+  allSortHitIndices <- seq_len(numHits)
+  
+  rawSortHitChunksList <- split(allSortHitIndices,
+                                ceiling(seq_along(allSortHitIndices)/
+                                          (pickedBinSize)))
+  
+  #last bin can be small, fix if too small.
+  #Too small is less than half pickedBinSize
+  if(length(rawSortHitChunksList[length(rawSortHitChunksList)]) <
+     0.8*pickedBinSize){
+    #if last bin is too small, split the last two bins into
+    #bins with equal number of hits
+    last2RawSortChunkIndices <-
+      c(rawSortHitChunksList[[(length(rawSortHitChunksList)-1)]],
+        rawSortHitChunksList[[length(rawSortHitChunksList)]])
+    
+    last2MidPoint <- floor(length(last2RawSortChunkIndices)/2)
+    
+    rawSortHitChunksList[[(length(rawSortHitChunksList)-1)]] <-
+      last2RawSortChunkIndices[seq_len(last2MidPoint)]
+    
+    rawSortHitChunksList[[length(rawSortHitChunksList)]] <-
+      last2RawSortChunkIndices[(last2MidPoint+1):
+                                 length(last2RawSortChunkIndices)]
+    
+    sortHitChunksList <- rawSortHitChunksList
+    
+    if(verbose){
+      message("Small last bin resolved.")
+    }
+  }else{
+    sortHitChunksList <- rawSortHitChunksList
+  }
+  return(sortHitChunksList)
+}
+
+#' Convert p-values to adjusted p-values
+#'
+#' Convert a set of p-values to adjusted pvalues with a specified method and
+#' return a function for converting set of pvalues to number of 
+#' expected true positives.
+#'
+#' @param pVal Input p-values.
+#' 
+#' @param method One of "bonferroni" or "qvalue". (Default: \code{qvalue}).
+#'
+#' @return A list two slots:
+#' \describe{
+#' \item{pAdj}{Adjusted p-values.}
+#' \item{etpFun}{A function for calculating the number of expected true
+#'  positives from adjusted p-values.}
+#' }
+#'
+#' @details
+#' Not exported. This function adjusted p-values by the specified method. It
+#' also returns a function that calculates the fraction of expected true
+#' positives from a subset of the adjusted p-values
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' outPadjList <- calcPadjsAndEtpFun(myPVals,method="qvalue")
+#' }
+#' @author Brian S. Roberts
+#'
+
+calcPadjsAndEtpFun <- function(pVal,
+                               method="qvalue"){
+  
+  if(is.na(match(method,c("bonferroni","qvalue")))){
+    warning("Invalid adjusted p-value method selected.")
+  }
+  
+  if(method=="bonferroni"){
+    outPadj <- rep(NA,length(pVal))
+    maskNoNAPProm <- which(!is.na(pVal))
+    noNaPadj <- p.adjust(pVal[maskNoNAPProm],method=method)
+    outPadj[maskNoNAPProm] <- noNaPadj
+    
+    tpFun <- function(subsetPAdjs,alpha){
+      numPassAlpha <- length(which(subsetPAdjs <= alpha))
+      truePosCalls <- numPassAlpha * (1 - alpha)
+      return(truePosCalls)
+    }
+  }
+  
+  if(method=="qvalue"){
+    outPadj <- rep(NA,length(pVal))
+    maskNoNAPProm <- which(!is.na(pVal))
+    noNaPadj <- qvalue::lfdr(pVal[maskNoNAPProm])
+    outPadj[maskNoNAPProm] <- noNaPadj
+    
+    #note that alpha is not used in this function but is left as a parameter
+    #for programmatic simplicity
+    tpFun <- function(subsetPAdjs,alpha=1){
+      truePosCalls <- sum(1-subsetPAdjs)
+      return(truePosCalls)
+    }
+  }
+  outList <- list()
+  outList$pAdj <- outPadj
+  outList$etpFun <- tpFun
+  return(outList)
+}
+
+
+#' Adjust raw association probability for DEG true positive probability
+#'
+#' For a raw associations probabilities, this function multiplies this
+#' probability by the probability that the DEG is truly differentially
+#' expressed.
+#'
+#' @param rawAssocProbs Raw association probabilities
+#' @param pAdjs Adjusted p-values of the DEG.
+#' @param alphaVal Chosen significance level (only used if \code{method} =
+#' "bonferroni")
+#' @param method Method for adjusting p-values.
+#' One of "bonferroni" or "qvalue". (Default: \code{qvalue}).
+#'
+#' @return A numeric vector of adjusted association probilities
+#'
+#' @details
+#' Not exported. This function multiplies the raw association probabilities
+#' by the probability that the DEG is truly differential expressed. This "true
+#' DEG" probability is determined depending on the choice of \code{method}. 
+#' For "bonferroni" the probability is 1 if the corresponding pAdj is less than
+#' or equal to \code{alphaVal} and 0 otherwise. For "qvalue" the probability is
+#' 1 - localFDR as calculated in \link[qvalue]{lfdr}.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' adjAssocProbs <- adjustRawAssocProb(myRawAssocProbs,pAdjs=myPadjs,
+#'                                     alphaVal=0.01,method="qvalue")
+#' }
+#' @author Brian S. Roberts
+#'
+
+adjustRawAssocProb <- function(rawAssocProbs,
+                               pAdjs,
+                               alphaVal=0.01,
+                               method="qvalue"){
+  
+  if(is.na(match(method,c("bonferroni","qvalue")))){
+    warning("Invalid adjusted p-value method selected.")
+  }
+  
+  if(method=="bonferroni"){
+    trueDegProb <- rep(0,length(pAdjs))
+    trueDegProb[which(pAdjs<=alphaVal)] <- 1
+    
+    adjAssocProb <- trueDegProb*rawAssocProbs
+  }
+  
+  
+  if(method=="qvalue"){
+    trueDegProb <- 1- pAdjs
+    
+    adjAssocProb <- trueDegProb*rawAssocProbs
+  }
+  
+  return(adjAssocProb)
+}
