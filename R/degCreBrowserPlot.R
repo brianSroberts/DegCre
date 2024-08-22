@@ -803,6 +803,10 @@ makePlotGInter <- function(DegGR,
 
   GInterX$assocProb <- newAdjAssocProb
   GInterX$assocProbFDR <- newAdjAssocProbFDR
+  
+  #sort GInterX before returning
+  GInterX <- sort(GInterX)
+  
   return(GInterX)
 }
 

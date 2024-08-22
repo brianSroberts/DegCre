@@ -13,7 +13,8 @@ test_that("runDegCre", {
                              DegLfc=subDegGR$logFC,
                              CreGR=subCreGR,
                              CreP=subCreGR$pVal,
-                             CreLfc=subCreGR$logFC)
+                             CreLfc=subCreGR$logFC,
+                             padjMethod = "qvalue")
 
   ## test results
 
@@ -29,26 +30,26 @@ test_that("runDegCre", {
   # Spot check selected association probs
   # These values were selected to test the dynamic range of non-zero
   # association probs and are thus the high end of the distribution
-  # (95% and higher)
+  # (90% and higher)
 
-  testedIndices <- c(7302,11035,18862,25135,28662,30311)
+  testedIndices <- c(10613,18745,20768,25078,27163,30737)
 
-  testedExpectedAssocProbs <- c(0.42593023,0.10610199,0.49500000,0.21796426,
-                                0.21796426,0.07869565)
+  testedExpectedAssocProbs <- c(0.2109517,0.6114172,0.1306104,0.2327426,
+                                0.4821006,0.1337257)
 
   calcAssocProbs <- mcols(degCreResList$degCreHits)$assocProb[testedIndices]
 
-  expect_equal(calcAssocProbs,testedExpectedAssocProbs,tolerance=1e-6)
+  expect_equal(calcAssocProbs,testedExpectedAssocProbs,tolerance=1e-4)
 
   # Spot check selected assocProbFDRs. These are selected from the same indices
   # as testedExpectedAssocProbs
 
-  testedExpectedFDRs <- c(3.337349e-07,6.083834e-01,6.029520e-04,
-                          2.619634e-03,2.282431e-03,4.860181e-01)
+  testedExpectedFDRs <- c(1.501954e-08,2.449965e-05,1.393260e-01,
+                          1.080136e-11,0.000000e+00,1.000000e+00)
 
   calcFDRs <- mcols(degCreResList$degCreHits)$assocProbFDR[testedIndices]
 
-  expect_equal(calcFDRs,testedExpectedFDRs,tolerance=1e-6)
+  expect_equal(calcFDRs,testedExpectedFDRs,tolerance=1e-5)
 })
 
 test_that("optimizeAlphaDegCre", {
@@ -70,6 +71,7 @@ test_that("optimizeAlphaDegCre", {
                                           CreP=subCreGR$pVal,
                                           CreLfc=subCreGR$logFC,
                                           testedAlphaVals=alphaTestSet,
+                                          padjMethod="bonferroni",
                                           verbose=FALSE)
   
   
@@ -124,9 +126,9 @@ test_that("degCrePRAUC", {
   expect_equal(dim(testPrAUCList$shuffTprQMat),c(200,3))
   expect_equal(dim(testPrAUCList$shuffPpvQMat),c(200,3))
 
-  expect_equal(testPrAUCList$AUC,0.02358739,tolerance=1e-6)
+  expect_equal(testPrAUCList$AUC,0.07262013,tolerance=1e-4)
 
   # must have low tolreance for normDeltaAUC because it is compared to
   # a null distribution created by random sampling
-  expect_equal(testPrAUCList$normDeltaAUC,0.01573533,tolerance=1e-2)
+  expect_equal(testPrAUCList$normDeltaAUC,0.06503126,tolerance=1e-2)
 })

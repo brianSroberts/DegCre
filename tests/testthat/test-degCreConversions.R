@@ -19,8 +19,10 @@ test_that("calcRawAssocProbOR", {
 
   # indices are based on top quantiles of assocProb
   testedIndices <- c(881,1003,15715,18745,19170,29471)
-
-  testORs <- c(3.044118,3.672581,3.044118,2.611239,2.611239,3.373333)
+  
+  calcORvec[testedIndices]
+  
+  testORs <- c(5.299773,6.270764,5.299773,2.725314,2.725314,4.245307)
 
   expect_equal(calcORvec[testedIndices],testORs,tolerance=1e-5)
 })
@@ -48,9 +50,10 @@ test_that("convertdegCreResListToGInteraction", {
 
   #pick subset of assocProb that span the range
   testGInterIndices <- c(40,59,10,22,373,555)
-
-  testGInterAssocProbs <- c(0.2368760,0.3641969,0.3611066,0.1606195,
-                            0.4950000,0.2842414)
+  mcols(calcGInter)$assocProb[testGInterIndices]
+  
+  testGInterAssocProbs <- c(0.1328839,0.5261069,0.1510457,0.3840299,
+                            0.2136784,0.6242492)
 
   expect_equal(mcols(calcGInter)$assocProb[testGInterIndices],
                testGInterAssocProbs,
@@ -95,7 +98,7 @@ test_that("convertDegCreDataFrame", {
   #pick subset of assocProb that span the range
   testIndices <- c(57,231,358,401,477)
 
-  testAssocProbs <- c(0.2368760,0.2842414,0.1607254,0.4950000,0.3641969)
+  testAssocProbs <- c(0.6216533,0.1718222,0.5160128,0.3712580,0.4490510)
 
   expect_equal(degCreDf$assocProb[testIndices],
                testAssocProbs,

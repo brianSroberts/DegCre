@@ -1,8 +1,8 @@
 Package: DegCre
 Type: Package
 Title: Probabilistic association of DEGs to CREs from differential data
-Version: 1.0.2
-Date: 2024-06-27
+Version: 1.1.0.9000
+Date: 2024-08-21
 Authors@R: c(person(given="Brian S.",
                   family="Roberts",
                   email = "brianroberts1976@yahoo.com",
@@ -36,6 +36,10 @@ Imports:
 	BiocGenerics,
 	GenomeInfoDb,
 	IRanges,
+	BiocParallel,
+	qvalue,
+	TxDb.Hsapiens.UCSC.hg38.knownGene,
+	org.Hs.eg.db,
 	utils
 biocViews:
 	GeneExpression,
@@ -47,12 +51,10 @@ biocViews:
 Suggests: 
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg38,
-    org.Hs.eg.db,
     BiocStyle,
     magick,
     knitr,
     rmarkdown,
-    TxDb.Hsapiens.UCSC.hg38.knownGene,
     TxDb.Mmusculus.UCSC.mm10.knownGene,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
