@@ -2,7 +2,7 @@
 
 ## NEW FEATURES
 
-* `runDegCre` now accepts `"qvalue"` as an input to `pAdjMethod` which is now the default. Our testing shows that this method improves the performance of DegCre predictions. The qvalue calculation does not require the used to specify a `alphaVal`.
+* `runDegCre` now accepts `"qvalue"` as an input to `pAdjMethod` which is now the default. Our testing shows that this method improves the performance of DegCre predictions. The qvalue calculation does not require the user to specify a `alphaVal`.
 
 * Added new function `collapseDegCreToGene` which converts DegCre results for gene with multiple TSSs to use only the association that spans the shortest distance.
 
