@@ -1,5 +1,5 @@
-# CHANGES IN VERSION 1.2.0
-* Version up to stable release.
+# CHANGES IN VERSION 1.1.1
+* Version up.
 
 # CHANGES IN VERSION 1.1.0.9000
 
