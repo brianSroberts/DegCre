@@ -51,7 +51,7 @@ degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
 
 #Calculate odds-ratio.
 
-calcOR <- calcAdjAssocProbOR(degCreResListDexNR3C1)
+calcOR <- calcAssocProbOR(degCreResListDexNR3C1)
 
 }
 \author{
