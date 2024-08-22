@@ -14,7 +14,7 @@
 
 * Streamlined `runDegCre` code to use more subfunctions.
 
-##BUG FIXES
+## BUG FIXES
 
 * Changed the internal function `makePlotGInter` to return a sorted `GInteractions` to avoid inconsistent returns.
 
