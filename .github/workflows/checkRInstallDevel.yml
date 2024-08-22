@@ -9,8 +9,6 @@
 name: R
 
 on:
-  push:
-    branches: [ "devel" ]
   workflow_dispatch:
     branches: [ "devel" ]
 
