@@ -20,6 +20,8 @@
 #' @importFrom plotgardener colorby plotPairsArches annoHeatmapLegend plotSignal annoYaxis plotGenomeLabel plotGenes plotText pageCreate
 #' @importFrom qvalue lfdr
 #' @importFrom BiocParallel bpparam SerialParam MulticoreParam bplapply
+#' @import TxDb.Hsapiens.UCSC.hg38.knownGene
+#' @import org.Hs.eg.db
 "_PACKAGE"
 
 #' DegCre input data for examples.
