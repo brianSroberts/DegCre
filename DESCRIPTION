@@ -51,12 +51,10 @@ biocViews:
 Suggests: 
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg38,
-    org.Hs.eg.db,
     BiocStyle,
     magick,
     knitr,
     rmarkdown,
-    TxDb.Hsapiens.UCSC.hg38.knownGene,
     TxDb.Mmusculus.UCSC.mm10.knownGene,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
