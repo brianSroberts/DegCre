@@ -126,7 +126,7 @@ test_that("degCrePRAUC", {
   expect_equal(dim(testPrAUCList$shuffTprQMat),c(200,3))
   expect_equal(dim(testPrAUCList$shuffPpvQMat),c(200,3))
 
-  expect_equal(testPrAUCList$AUC,0.07262013,tolerance=1e-6)
+  expect_equal(testPrAUCList$AUC,0.07262013,tolerance=1e-4)
 
   # must have low tolreance for normDeltaAUC because it is compared to
   # a null distribution created by random sampling

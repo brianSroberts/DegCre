@@ -38,6 +38,8 @@ Imports:
 	IRanges,
 	BiocParallel,
 	qvalue,
+	TxDb.Hsapiens.UCSC.hg38.knownGene,
+	org.Hs.eg.db,
 	utils
 biocViews:
 	GeneExpression,
