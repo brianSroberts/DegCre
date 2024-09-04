@@ -8,10 +8,7 @@ Authors@R: c(person(given="Brian S.",
                   email = "brianroberts1976@yahoo.com",
                   role = c("aut", "cre"),
                   comment=c(ORCID = "0009-0001-2914-6826")))
-Maintainer@R: c(person(given="Brian S.",
-                     family="Roberts",
-                     email = "brianroberts1976@yahoo.com",
-                     comment=c(ORCID = "0009-0001-2914-6826")))
+Maintainer: Brian S. Roberts <brianroberts1976@yahoo.com>
 Description:
     DegCre generates associations between differentially expressed genes (DEGs)
     and cis-regulatory elements (CREs) based on non-parametric concordance 
