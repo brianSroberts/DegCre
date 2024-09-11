@@ -1,3 +1,9 @@
+# CHANGES IN VERSION 1.1.2
+
+## BUG FIXES
+
+* Fixed major bug in `collapseDegCreToGene`.
+
 # CHANGES IN VERSION 1.1.1
 * Version up.
 

@@ -78,7 +78,7 @@ collapseDegCreToGene <- function(degCreResList,
   geneNamesSubjHitsHash <- paste0(hitsOrdGeneNames, "_", subjectHits(hitsX))
   
   # Compute the frequency of each hash
-  rleGeneNameSubjHash <- rle(geneNamesSubjHitsHash)
+  rleGeneNameSubjHash <- rle(sort(geneNamesSubjHitsHash))
   hashesNeedAttn <- rleGeneNameSubjHash$values[rleGeneNameSubjHash$lengths > 1]
   
   # Identify indices that need attention
