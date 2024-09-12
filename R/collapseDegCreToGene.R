@@ -99,21 +99,27 @@ collapseDegCreToGene <- function(degCreResList,
       uniqGeneNamesSubjHitsHashNeedAttn <- 
         unique(geneNamesSubjHitsHash[maskHashesNeedAttn])
       
-      attnHashesKeepIndices <- 
-        BiocParallel::bplapply(uniqGeneNamesSubjHitsHashNeedAttn,
-                               FUN = function(geneHashX) {
-                                 hitsIndicesX <- 
-                                   maskHashesNeedAttn[which(geneNamesSubjHitsHash[maskHashesNeedAttn] == geneHashX)]
-                                 return(hitsIndicesX[which.min(S4Vectors::mcols(hitsX)$assocDist[hitsIndicesX])])
-                               },
-                               BPPARAM = BpParam
-        )
+      geneNamesSubjHitsHashFac <- factor(geneNamesSubjHitsHash[maskHashesNeedAttn],
+                                         levels=uniqGeneNamesSubjHitsHashNeedAttn)
       
+      attnHashesIndicesList  <- 
+        split(maskHashesNeedAttn,f = geneNamesSubjHitsHashFac)
+      
+      attnHashesDistList <- split(S4Vectors::mcols(hitsX)$assocDist[maskHashesNeedAttn],
+                                  f = geneNamesSubjHitsHashFac)
+      
+      keepIndexFun <- function(i,dist){
+        return(i[which.min(dist)])
+      }
+      
+      attnHashesKeepIndices <- mapply(keepIndexFun,
+                                      attnHashesIndicesList,
+                                      attnHashesDistList)
+
       attnHashesKeepIndices <- unlist(attnHashesKeepIndices, use.names = FALSE)
     } else {
       stop("Unsupported method: ", method)
     }
-    
     allKeepHitIndices <- sort(c(maskHashesDontNeedAttn, attnHashesKeepIndices))
   }
   

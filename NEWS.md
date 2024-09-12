@@ -1,3 +1,9 @@
+# CHANGES IN VERSION 1.1.3
+
+## NEW FEATURES
+
+* Changed `collapseDegCreToGene` to faster running code.
+
 # CHANGES IN VERSION 1.1.2
 
 ## BUG FIXES
