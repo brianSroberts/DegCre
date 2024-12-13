@@ -1,3 +1,13 @@
+# CHANGES IN VERSION 1.3.0
+
+## NEW FEATURES
+
+* Again updated `collapseDegCreToGene` to run much faster. No longer accepts a `useParallel` argument. Does not use BiocParallel.
+
+## BUG FIXES
+
+* Fixed bug in `convDegCreResListToCreGeneScoreGR` that called a deprecated function.
+
 # CHANGES IN VERSION 1.1.3
 
 ## NEW FEATURES

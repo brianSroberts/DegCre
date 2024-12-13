@@ -7,8 +7,7 @@
 collapseDegCreToGene(
   degCreResList,
   method = "nearest",
-  geneColname = "GeneSymb",
-  useParallel = TRUE
+  geneColname = "GeneSymb"
 )
 }
 \arguments{
@@ -19,9 +18,6 @@ supported for "nearest". (Default:\code{"nearest"})}
 
 \item{geneColname}{The name of the metadata column in DegGR within
 \code{degCreResList} that has the gene name (Default:\code{"GeneSymb"})}
-
-\item{useParallel}{Logical whether to implement parallelization with
-\link[BiocParallel]{BiocParallel} package. (Default:\code{FALSE})}
 }
 \value{
 A \code{degCreResList} with only the shortest TSS to CRE
@@ -63,8 +59,7 @@ degCreResListDexNR3C1 <- runDegCre(DegGR=subDegGR,
 
 degCreResListUniqTSS <- collapseDegCreToGene(degCreResListDexNR3C1,
                                              method = "nearest",
-                                             geneColname = "GeneSymb",
-                                             useParallel=FALSE)
+                                             geneColname = "GeneSymb")
 
 }
 \author{

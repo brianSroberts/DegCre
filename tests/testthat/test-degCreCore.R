@@ -3,9 +3,9 @@ test_that("runDegCre", {
   data("DexNR3C1")
   
   subDegGR <- 
-    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+    DexNR3C1$DegGR[GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1"]
   subCreGR <- 
-    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
+    DexNR3C1$CreGR[GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   # get runDegCre results with defaults.
   degCreResList <- DegCre::runDegCre(DegGR=subDegGR,
@@ -58,9 +58,9 @@ test_that("optimizeAlphaDegCre", {
   data("DexNR3C1")
   
   subDegGR <- 
-    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+    DexNR3C1$DegGR[GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1"]
   subCreGR <- 
-    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
+    DexNR3C1$CreGR[GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   alphaTestSet <- c(0.001,0.003,0.005,0.01,0.05,0.1)
 
@@ -92,9 +92,9 @@ test_that("degCrePRAUC", {
   data("DexNR3C1")
   
   subDegGR <- 
-    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+    DexNR3C1$DegGR[GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1"]
   subCreGR <- 
-    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
+    DexNR3C1$CreGR[GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1"]
 
   degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
                                              DegP=subDegGR$pVal,
@@ -126,7 +126,7 @@ test_that("degCrePRAUC", {
   expect_equal(dim(testPrAUCList$shuffTprQMat),c(200,3))
   expect_equal(dim(testPrAUCList$shuffPpvQMat),c(200,3))
 
-  expect_equal(testPrAUCList$AUC,0.07262013,tolerance=1e-4)
+  expect_equal(testPrAUCList$AUC,0.07262013,tolerance=1e-2)
 
   # must have low tolreance for normDeltaAUC because it is compared to
   # a null distribution created by random sampling

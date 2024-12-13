@@ -49,7 +49,7 @@ This function simplifies a \code{degResList} to a
 and a score of that prediction (\code{predictScore}). 
 If \code{scoreType = "assocProb"}, the score is the DegCre association
 probability. By setting \code{scoreType = "adjOR"} the odds-ratio of the 
-association probability is calculated with \link{calcAdjAssocProbOR} and
+association probability is calculated with \link{calcAssocProbOR} and
 reported. This can be useful to emphasize associations
 that are greatly above background and will tend to weight longer distance
 associations more heavily. By setting \code{scoreType = "rawAssocProb"} the 

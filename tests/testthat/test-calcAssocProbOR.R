@@ -3,9 +3,9 @@ test_that("calcAssocProbOR", {
   data("DexNR3C1")
   
   subDegGR <- 
-    DexNR3C1$DegGR[GenomicRanges::seqnames(DexNR3C1$DegGR)=="chr1"]
+    DexNR3C1$DegGR[GenomeInfoDb::seqnames(DexNR3C1$DegGR)=="chr1"]
   subCreGR <- 
-    DexNR3C1$CreGR[GenomicRanges::seqnames(DexNR3C1$CreGR)=="chr1"]
+    DexNR3C1$CreGR[GenomeInfoDb::seqnames(DexNR3C1$CreGR)=="chr1"]
   
   degCreResListDexNR3C1 <- DegCre::runDegCre(DegGR=subDegGR,
                                              DegP=subDegGR$pVal,

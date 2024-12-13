@@ -9,8 +9,6 @@
 #' supported for "nearest". (Default:\code{"nearest"})
 #' @param geneColname The name of the metadata column in DegGR within
 #' \code{degCreResList} that has the gene name (Default:\code{"GeneSymb"})
-#' @param useParallel Logical whether to implement parallelization with
-#' \link[BiocParallel]{BiocParallel} package. (Default:\code{FALSE})
 #'
 #' @return A \code{degCreResList} with only the shortest TSS to CRE
 #' association per gene.
@@ -46,27 +44,14 @@
 #' 
 #' degCreResListUniqTSS <- collapseDegCreToGene(degCreResListDexNR3C1,
 #'                                              method = "nearest",
-#'                                              geneColname = "GeneSymb",
-#'                                              useParallel=FALSE)
+#'                                              geneColname = "GeneSymb")
 #'
 #' @author Brian S. Roberts
 #'
 #' @export
 collapseDegCreToGene <- function(degCreResList,
                                  method = "nearest",
-                                 geneColname = "GeneSymb",
-                                 useParallel=TRUE) {
-  
-  BpParam <- BiocParallel::SerialParam()
-  if(useParallel){
-    #check for registered BiocParallel backend
-    currentBpParam <- BiocParallel::bpparam()
-    if(!inherits(currentBpParam,"SerialParam")){
-      BpParam <- currentBpParam
-    }else{
-      BpParam <- BiocParallel::MulticoreParam()
-    }
-  }
+                                 geneColname = "GeneSymb"){
   
   hitsX <- degCreResList$degCreHits
   
@@ -79,16 +64,16 @@ collapseDegCreToGene <- function(degCreResList,
   
   # Compute the frequency of each hash
   rleGeneNameSubjHash <- rle(sort(geneNamesSubjHitsHash))
-  hashesNeedAttn <- rleGeneNameSubjHash$values[rleGeneNameSubjHash$lengths > 1]
+  uniqHashesNeedAttn <- rleGeneNameSubjHash$values[rleGeneNameSubjHash$lengths > 1]
   
   # Identify indices that need attention
-  maskHashesNeedAttn <- which(geneNamesSubjHitsHash %in% hashesNeedAttn)
+  maskHashesNeedAttn <- which(geneNamesSubjHitsHash %in% uniqHashesNeedAttn)
   
   if (length(maskHashesNeedAttn) < 1) {
     allKeepHitIndices <- seq_along(geneNamesSubjHitsHash)
     message("No DegCre associations found to collapse on gene.")
   } else {
-    message("Processing associations for gene collapse")
+    message("Processing ",length(maskHashesNeedAttn), " associations for gene collapse")
     
     maskHashesDontNeedAttn <- 
       setdiff(seq_along(geneNamesSubjHitsHash), maskHashesNeedAttn)
@@ -96,30 +81,30 @@ collapseDegCreToGene <- function(degCreResList,
     # Handle attention-needed hashes
     if (method == "nearest") {
       
-      uniqGeneNamesSubjHitsHashNeedAttn <- 
-        unique(geneNamesSubjHitsHash[maskHashesNeedAttn])
+      hashesNeedAttn <- geneNamesSubjHitsHash[maskHashesNeedAttn]
       
-      geneNamesSubjHitsHashFac <- factor(geneNamesSubjHitsHash[maskHashesNeedAttn],
-                                         levels=uniqGeneNamesSubjHitsHashNeedAttn)
+      distsHashesNeedAttn <- S4Vectors::mcols(hitsX)$assocDist[maskHashesNeedAttn]
       
-      attnHashesIndicesList  <- 
-        split(maskHashesNeedAttn,f = geneNamesSubjHitsHashFac)
+      #sort by -distsHashesNeedAttn to make shortest distance order last
+      subMaskorderHashesNeedAttn <- order(hashesNeedAttn,-distsHashesNeedAttn)
       
-      attnHashesDistList <- split(S4Vectors::mcols(hitsX)$assocDist[maskHashesNeedAttn],
-                                  f = geneNamesSubjHitsHashFac)
+      orderedMaskHashesNeedAttn <- maskHashesNeedAttn[subMaskorderHashesNeedAttn]
       
-      keepIndexFun <- function(i,dist){
-        return(i[which.min(dist)])
-      }
+      orderedHashesNeedAttn <- hashesNeedAttn[subMaskorderHashesNeedAttn]
       
-      attnHashesKeepIndices <- mapply(keepIndexFun,
-                                      attnHashesIndicesList,
-                                      attnHashesDistList)
-
-      attnHashesKeepIndices <- unlist(attnHashesKeepIndices, use.names = FALSE)
+      #RLE trick
+      rleHashes <- rle(orderedHashesNeedAttn)
+      
+      rleHashLength <- rleHashes$lengths
+      
+      rleBestRowI <- cumsum(rleHashLength)
+      
+      attnHashesKeepIndices <- orderedMaskHashesNeedAttn[rleBestRowI]
+      
     } else {
       stop("Unsupported method: ", method)
     }
+    
     allKeepHitIndices <- sort(c(maskHashesDontNeedAttn, attnHashesKeepIndices))
   }
   
