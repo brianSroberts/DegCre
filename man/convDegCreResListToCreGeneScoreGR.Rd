@@ -10,7 +10,7 @@ convDegCreResListToCreGeneScoreGR(
   geneColname = "GeneSymb",
   onlyDEGs = TRUE,
   DEgAlpha = NULL,
-  degPadjColname = "pAdj"
+  degPadjColname = "DegPadj"
 )
 }
 \arguments{
@@ -29,14 +29,16 @@ a gene with an adjusted p-value less than or equal to \code{DEgAlpha} are
 returned. (Default:\code{TRUE})}
 
 \item{DEgAlpha}{Significance threshold for DEGs in associations to report.
+If \code{NULL} it is set to the value in the \code{degCreResList}.
 (Default:\code{NULL}.)}
 
-\item{degPadjColname}{The metadata column name in \code{DegGR} that contains
-the adjusted p-values. (Default:\code{pAdj})}
+\item{degPadjColname}{The metadata column name in \code{degCreHits} that
+contains the adjusted p-values. (Default:\code{DegPadj})}
 }
 \value{
 A \link[GenomicRanges]{GRanges} of CRE regions with metadata columns
-of \code{predictGene} and \code{predictScore}.
+of \code{predictGene}, \code{predictScore}, and \code{assocDist} (the
+genomic distance spanned by the CRE to gene link).
 }
 \description{
 Converts a degCreResList to a hit indexed \link[GenomicRanges]{GRanges} with 
@@ -85,7 +87,7 @@ creToGeneGR <- convDegCreResListToCreGeneScoreGR(degCreResListDexNR3C1,
                                                  geneColname="GeneSymb",
                                                  onlyDEGs=TRUE,
                                                  DEgAlpha=NULL,
-                                                 degPadjColname="pAdj")
+                                                 degPadjColname="DegPadj")
 
 }
 \author{

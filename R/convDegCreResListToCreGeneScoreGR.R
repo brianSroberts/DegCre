@@ -15,9 +15,10 @@
 #' a gene with an adjusted p-value less than or equal to \code{DEgAlpha} are
 #' returned. (Default:\code{TRUE})
 #' @param DEgAlpha Significance threshold for DEGs in associations to report.
+#' If \code{NULL} it is set to the value in the \code{degCreResList}.
 #' (Default:\code{NULL}.)
-#' @param degPadjColname The metadata column name in \code{DegGR} that contains
-#' the adjusted p-values. (Default:\code{pAdj})
+#' @param degPadjColname The metadata column name in \code{degCreHits} that
+#' contains the adjusted p-values. (Default:\code{DegPadj})
 #' 
 #' @details This function simplifies a \code{degResList} to a 
 #' \link[GenomicRanges]{GRanges} with metadata of the predicted associated gene
@@ -34,7 +35,8 @@
 #' in the absence of a perturbation.
 #' 
 #' @return A \link[GenomicRanges]{GRanges} of CRE regions with metadata columns
-#' of \code{predictGene} and \code{predictScore}.
+#' of \code{predictGene}, \code{predictScore}, and \code{assocDist} (the
+#' genomic distance spanned by the CRE to gene link).
 #' @author Brian S. Roberts
 #'
 #' @examples
@@ -64,7 +66,7 @@
 #'                                                  geneColname="GeneSymb",
 #'                                                  onlyDEGs=TRUE,
 #'                                                  DEgAlpha=NULL,
-#'                                                  degPadjColname="pAdj")
+#'                                                  degPadjColname="DegPadj")
 #'
 #' @export
 #' 
@@ -73,7 +75,7 @@ convDegCreResListToCreGeneScoreGR <- function(degCreResList,
                                               geneColname="GeneSymb",
                                               onlyDEGs=TRUE,
                                               DEgAlpha=NULL,
-                                              degPadjColname="pAdj"){
+                                              degPadjColname="DegPadj"){
   
   #get hits-indexed CreGR
   creHitsIndices <- S4Vectors::subjectHits(degCreResList$degCreHits)
@@ -87,7 +89,7 @@ convDegCreResListToCreGeneScoreGR <- function(degCreResList,
   }
   
   if(scoreType=="adjOR"){
-    adjORs <- calcAssocProbOR(degCreResList)
+    adjORs <- calcAssocProbOR(degCreResList,type="adj")
     hitIndexedScore <- adjORs
   }
   
@@ -104,10 +106,13 @@ convDegCreResListToCreGeneScoreGR <- function(degCreResList,
   
   hitIndexedGeneName <- as.character(mcolsDegHitIndexedDf[,maskGeneCol])
   
+  hitIndexedAssocDist <- hitIndexedMcolsDf$assocDist
+  
   outCreGeneScoreGR <- granges(hitIndexedCreGR)
   
   outCreGeneScoreGR$predictGene <- hitIndexedGeneName
   outCreGeneScoreGR$predictScore <- hitIndexedScore
+  outCreGeneScoreGR$assocDist <- hitIndexedAssocDist
   
   if(onlyDEGs){
     if(is.null(DEgAlpha)){
@@ -116,8 +121,8 @@ convDegCreResListToCreGeneScoreGR <- function(degCreResList,
       degAlpha <- DEgAlpha
     }
     
-    maskPadj <- which(colnames(mcolsDegHitIndexedDf) == degPadjColname)
-    maskOnlyDegs <- which(mcolsDegHitIndexedDf[,maskPadj] <= degAlpha)
+    maskPadj <- which(colnames(hitIndexedMcolsDf) == degPadjColname)
+    maskOnlyDegs <- which(hitIndexedMcolsDf[,maskPadj] <= degAlpha)
     outCreGeneScoreGR <- outCreGeneScoreGR[maskOnlyDegs]
   }
   

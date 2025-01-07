@@ -21,7 +21,7 @@ test_that("convDegCreResListToCreGeneScoreGR", {
                                               geneColname="GeneSymb",
                                               onlyDEGs=TRUE,
                                               DEgAlpha=NULL,
-                                              degPadjColname="pAdj")
+                                              degPadjColname="DegPadj")
   
   testIndices <- c(1,2,5,100,500,1000,2000,3000,3500,3757)
   
@@ -31,7 +31,12 @@ test_that("convDegCreResListToCreGeneScoreGR", {
   expectGeneNames <- c("CHD5","CHD5","CHD5","ERRFI1","TRIM63","NFIA","MCL1",
                        "TMCC2","LEFTY1","GREM2")
   
+  expectDists <- c(21906,79448,230270,322181,30752,57172,615566,81366,
+                   73397,340933)
+  
   expect_equal(creToGeneGR$predictScore[testIndices],expectVals,tolerance=1e-4)
   
   expect_equal(creToGeneGR$predictGene[testIndices],expectGeneNames)
+  
+  expect_equal(creToGeneGR$assocDist[testIndices],expectDists)
 })
