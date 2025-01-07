@@ -1,3 +1,9 @@
+# CHANGES IN VERSION 1.3.1
+
+## NEW FEATURES
+
+* Updated `convDegCreResListToCreGeneScoreGR` to report association distance in mcol.
+
 # CHANGES IN VERSION 1.3.0
 
 ## NEW FEATURES
