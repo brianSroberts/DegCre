@@ -286,7 +286,18 @@ plotBrowserDegCre <- function(degCreResList,
     palette=assocColorPallette,
     range=assocColorRange)
 
-  assocArchesPlot <- plotgardener::plotPairsArches(GInterX,
+  # Explicitly extract coordinates and metadata to bypass S4 coercion failures
+  GInterX_df <- data.frame(
+    chrom1 = as.character(GenomeInfoDb::seqnames(S4Vectors::first(GInterX))),
+    start1 = BiocGenerics::start(S4Vectors::first(GInterX)),
+    end1   = BiocGenerics::end(S4Vectors::first(GInterX)),
+    chrom2 = as.character(GenomeInfoDb::seqnames(S4Vectors::second(GInterX))),
+    start2 = BiocGenerics::start(S4Vectors::second(GInterX)),
+    end2   = BiocGenerics::end(S4Vectors::second(GInterX)),
+    assocProb = GInterX$assocProb
+  )
+
+  assocArchesPlot <- plotgardener::plotPairsArches(data = GInterX_df,
     chrom= plotChrX,
     chromstart= plotStartX,
     chromend= plotEndX,
